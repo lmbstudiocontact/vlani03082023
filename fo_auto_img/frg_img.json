@@ -1,0 +1,1125 @@
+[
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\n//https://github.com/gl-transitions/gl-transitions/blob/master/transitions/BookFlip.glsl\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec2 skewRight(vec2 p) {\r\n    float skewX = (p.x - dm_progress)/(0.5 - dm_progress) * 0.5;\r\n    float skewY =  (p.y - 0.5)/(0.5 + dm_progress * (p.x - 0.5) / 0.5)* 0.5  + 0.5;\r\n    return vec2(skewX, skewY);\r\n}\r\n\r\nvec2 skewLeft(vec2 p) {\r\n    float skewX = (p.x - 0.5)/(dm_progress - 0.5) * 0.5 + 0.5;\r\n    float skewY = (p.y - 0.5) / (0.5 + (1.0 - dm_progress ) * (0.5 - p.x) / 0.5) * 0.5  + 0.5;\r\n    return vec2(skewX, skewY);\r\n}\r\n\r\nvec4 addShade() {\r\n    float shadeVal  =  max(0.7, abs(dm_progress - 0.5) * 2.0);\r\n    return vec4(vec3(shadeVal ), 1.0);\r\n}\r\n\r\nvec4 transition (vec2 p) {\r\n    float pr = step(1.0 - dm_progress, p.x);\r\n\r\n    if (p.x < 0.5) {\r\n        return mix(getFromColor(p), getToColor(skewLeft(p)) * addShade(), pr);\r\n    } else {\r\n        return mix(getFromColor(skewRight(p)) * addShade(), getToColor(p),   pr);\r\n    }\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "BookFlip",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "shadow_height",
+        "value": 0.075
+      },
+      {
+        "key": "bounces",
+        "value": 3.0
+      },
+      {
+        "key": "shacolor_r",
+        "value": 0.0
+      },
+      {
+        "key": "shacolor_g",
+        "value": 0.0
+      },
+      {
+        "key": "shacolor_b",
+        "value": 0.0
+      },
+      {
+        "key": "shacolor_a",
+        "value": 0.6
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float shadow_height; // = 0.075\r\nuniform float bounces; // = 3.0\r\nuniform float shacolor_r;// =0.0\r\nuniform float shacolor_g;// =0.0\r\nuniform float shacolor_b;// =0.0\r\nuniform float shacolor_a;// =0.6\r\nconst float PI = 3.14159265358;\r\n\r\nvec4 transition (vec2 uv) {\r\n    float time = dm_progress;\r\n    float stime = sin(time * PI / 2.);\r\n    float phase = time * PI * bounces;\r\n    float y = (abs(cos(phase))) * (1.0 - stime);\r\n    float d = uv.y - y;\r\n    vec4 shadow_colour= vec4(shacolor_r,shacolor_g,shacolor_b,shacolor_a);\r\n    return mix(\r\n    mix(\r\n    getToColor(uv),\r\n    shadow_colour,\r\n    step(d, shadow_height) * (1. - mix(\r\n    ((d / shadow_height) * shadow_colour.a) + (1.0 - shadow_colour.a),\r\n    1.0,\r\n    smoothstep(0.95, 1., dm_progress) // fade-out the shadow at the end\r\n    ))\r\n    ),\r\n    getFromColor(vec2(uv.x, uv.y + (1.0 - y))),\r\n    step(d, 0.0)\r\n    );\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "Bounce",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec2 bottom_left = vec2(0.0, 1.0);\r\nvec2 bottom_right = vec2(1.0, 1.0);\r\nvec2 top_left = vec2(0.0, 0.0);\r\nvec2 top_right = vec2(1.0, 0.0);\r\nvec2 center = vec2(0.5, 0.5);\r\n\r\nfloat check(vec2 p1, vec2 p2, vec2 p3)\r\n{\r\n    return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);\r\n}\r\n\r\nbool PointInTriangle (vec2 pt, vec2 p1, vec2 p2, vec2 p3)\r\n{\r\n    bool b1, b2, b3;\r\n    b1 = check(pt, p1, p2) < 0.0;\r\n    b2 = check(pt, p2, p3) < 0.0;\r\n    b3 = check(pt, p3, p1) < 0.0;\r\n    return ((b1 == b2) && (b2 == b3));\r\n}\r\n\r\nbool in_left_triangle(vec2 p){\r\n    vec2 vertex1, vertex2, vertex3;\r\n    vertex1 = vec2(dm_progress, 0.5);\r\n    vertex2 = vec2(0.0, 0.5-dm_progress);\r\n    vertex3 = vec2(0.0, 0.5+dm_progress);\r\n    if (PointInTriangle(p, vertex1, vertex2, vertex3))\r\n    {\r\n        return true;\r\n    }\r\n    return false;\r\n}\r\n\r\nbool in_right_triangle(vec2 p){\r\n    vec2 vertex1, vertex2, vertex3;\r\n    vertex1 = vec2(1.0-dm_progress, 0.5);\r\n    vertex2 = vec2(1.0, 0.5-dm_progress);\r\n    vertex3 = vec2(1.0, 0.5+dm_progress);\r\n    if (PointInTriangle(p, vertex1, vertex2, vertex3))\r\n    {\r\n        return true;\r\n    }\r\n    return false;\r\n}\r\n\r\nfloat blur_edge(vec2 bot1, vec2 bot2, vec2 top, vec2 testPt)\r\n{\r\n    vec2 lineDir = bot1 - top;\r\n    vec2 perpDir = vec2(lineDir.y, -lineDir.x);\r\n    vec2 dirToPt1 = bot1 - testPt;\r\n    float dist1 = abs(dot(normalize(perpDir), dirToPt1));\r\n\r\n    lineDir = bot2 - top;\r\n    perpDir = vec2(lineDir.y, -lineDir.x);\r\n    dirToPt1 = bot2 - testPt;\r\n    float min_dist = min(abs(dot(normalize(perpDir), dirToPt1)), dist1);\r\n\r\n    if (min_dist < 0.005) {\r\n        return min_dist / 0.005;\r\n    }\r\n    else  {\r\n        return 1.0;\r\n    };\r\n}\r\n\r\n\r\nvec4 transition (vec2 uv) {\r\n    if (in_left_triangle(uv))\r\n    {\r\n        if (dm_progress < 0.1)\r\n        {\r\n            return getFromColor(uv);\r\n        }\r\n        if (uv.x < 0.5)\r\n        {\r\n            vec2 vertex1 = vec2(dm_progress, 0.5);\r\n            vec2 vertex2 = vec2(0.0, 0.5-dm_progress);\r\n            vec2 vertex3 = vec2(0.0, 0.5+dm_progress);\r\n            return mix(\r\n            getFromColor(uv),\r\n            getToColor(uv),\r\n            blur_edge(vertex2, vertex3, vertex1, uv)\r\n            );\r\n        }\r\n        else\r\n        {\r\n            if (dm_progress > 0.0)\r\n            {\r\n                return getToColor(uv);\r\n            }\r\n            else\r\n            {\r\n                return getFromColor(uv);\r\n            }\r\n        }\r\n    }\r\n    else if (in_right_triangle(uv))\r\n    {\r\n        if (uv.x >= 0.5)\r\n        {\r\n            vec2 vertex1 = vec2(1.0-dm_progress, 0.5);\r\n            vec2 vertex2 = vec2(1.0, 0.5-dm_progress);\r\n            vec2 vertex3 = vec2(1.0, 0.5+dm_progress);\r\n            return mix(\r\n            getFromColor(uv),\r\n            getToColor(uv),\r\n            blur_edge(vertex2, vertex3, vertex1, uv)\r\n            );\r\n        }\r\n        else\r\n        {\r\n            return getFromColor(uv);\r\n        }\r\n    }\r\n    else {\r\n        return getFromColor(uv);\r\n    }\r\n}\r\n\r\nvoid main(void) {\r\n    gl_FragColor =transition(vTexCoord);\r\n\r\n}",
+    "name_file": "BowTieHorizontal",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\n\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nfloat check(vec2 p1, vec2 p2, vec2 p3)\r\n{\r\n    return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);\r\n}\r\n\r\nbool PointInTriangle (vec2 pt, vec2 p1, vec2 p2, vec2 p3)\r\n{\r\n    bool b1, b2, b3;\r\n    b1 = check(pt, p1, p2) < 0.0;\r\n    b2 = check(pt, p2, p3) < 0.0;\r\n    b3 = check(pt, p3, p1) < 0.0;\r\n    return ((b1 == b2) && (b2 == b3));\r\n}\r\n\r\nbool in_top_triangle(vec2 p){\r\n    vec2 vertex1, vertex2, vertex3;\r\n    vertex1 = vec2(0.5, dm_progress);\r\n    vertex2 = vec2(0.5-dm_progress, 0.0);\r\n    vertex3 = vec2(0.5+dm_progress, 0.0);\r\n    if (PointInTriangle(p, vertex1, vertex2, vertex3))\r\n    {\r\n        return true;\r\n    }\r\n    return false;\r\n}\r\n\r\nbool in_bottom_triangle(vec2 p){\r\n    vec2 vertex1, vertex2, vertex3;\r\n    vertex1 = vec2(0.5, 1.0 - dm_progress);\r\n    vertex2 = vec2(0.5-dm_progress, 1.0);\r\n    vertex3 = vec2(0.5+dm_progress, 1.0);\r\n    if (PointInTriangle(p, vertex1, vertex2, vertex3))\r\n    {\r\n        return true;\r\n    }\r\n    return false;\r\n}\r\n\r\nfloat blur_edge(vec2 bot1, vec2 bot2, vec2 top, vec2 testPt)\r\n{\r\n    vec2 lineDir = bot1 - top;\r\n    vec2 perpDir = vec2(lineDir.y, -lineDir.x);\r\n    vec2 dirToPt1 = bot1 - testPt;\r\n    float dist1 = abs(dot(normalize(perpDir), dirToPt1));\r\n\r\n    lineDir = bot2 - top;\r\n    perpDir = vec2(lineDir.y, -lineDir.x);\r\n    dirToPt1 = bot2 - testPt;\r\n    float min_dist = min(abs(dot(normalize(perpDir), dirToPt1)), dist1);\r\n\r\n    if (min_dist < 0.005) {\r\n        return min_dist / 0.005;\r\n    }\r\n    else {\r\n        return 1.0;\r\n    };\r\n}\r\n\r\n\r\nvec4 transition (vec2 uv) {\r\n    if (in_top_triangle(uv))\r\n    {\r\n        if (dm_progress < 0.1)\r\n        {\r\n            return getFromColor(uv);\r\n        }\r\n        if (uv.y < 0.5)\r\n        {\r\n            vec2 vertex1 = vec2(0.5, dm_progress);\r\n            vec2 vertex2 = vec2(0.5-dm_progress, 0.0);\r\n            vec2 vertex3 = vec2(0.5+dm_progress, 0.0);\r\n            return mix(\r\n            getFromColor(uv),\r\n            getToColor(uv),\r\n            blur_edge(vertex2, vertex3, vertex1, uv)\r\n            );\r\n        }\r\n        else\r\n        {\r\n            if (dm_progress > 0.0)\r\n            {\r\n                return getToColor(uv);\r\n            }\r\n            else\r\n            {\r\n                return getFromColor(uv);\r\n            }\r\n        }\r\n    }\r\n    else if (in_bottom_triangle(uv))\r\n    {\r\n        if (uv.y >= 0.5)\r\n        {\r\n            vec2 vertex1 = vec2(0.5, 1.0-dm_progress);\r\n            vec2 vertex2 = vec2(0.5-dm_progress, 1.0);\r\n            vec2 vertex3 = vec2(0.5+dm_progress, 1.0);\r\n            return mix(\r\n            getFromColor(uv),\r\n            getToColor(uv),\r\n            blur_edge(vertex2, vertex3, vertex1, uv)\r\n            );\r\n        }\r\n        else\r\n        {\r\n            return getFromColor(uv);\r\n        }\r\n    }\r\n    else {\r\n        return getFromColor(uv);\r\n    }\r\n}\r\n\r\nvoid main(void) {\r\n    gl_FragColor =transition(vTexCoord);\r\n\r\n}",
+    "name_file": "BowTieVertical",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec3 color= vec3(0.9, 0.4, 0.2);\r\n    return mix(\r\n    getFromColor(uv) + vec4(dm_progress*color, 1.0),\r\n    getToColor(uv) + vec4((1.0-dm_progress)*color, 1.0),\r\n    dm_progress\r\n    );\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "burn",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "amplitude",
+        "value": 1.0
+      },
+      {
+        "key": "waves",
+        "value": 30.0
+      },
+      {
+        "key": "colorSeparation",
+        "value": 0.3
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\n\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float amplitude; // = 1.0\r\nuniform float waves; // = 30.0\r\nuniform float colorSeparation; // = 0.3\r\nfloat PI = 3.14159265358979323846264;\r\nfloat compute(vec2 p, float dm_progress, vec2 center) {\r\n    vec2 o = p*sin(dm_progress * amplitude)-center;\r\n    // horizontal vector\r\n    vec2 h = vec2(1., 0.);\r\n    // butterfly polar function (don't ask me why this one :))\r\n    float theta = acos(dot(o, h)) * waves;\r\n    return (exp(cos(theta)) - 2.*cos(4.*theta) + pow(sin((2.*theta - PI) / 24.), 5.)) / 10.;\r\n}\r\nvec4 transition(vec2 uv) {\r\n    vec2 p = uv.xy / vec2(1.0).xy;\r\n    float inv = 1. - dm_progress;\r\n    vec2 dir = p - vec2(.5);\r\n    float dist = length(dir);\r\n    float disp = compute(p, dm_progress, vec2(0.5, 0.5)) ;\r\n    vec4 texTo = getToColor(p + inv*disp);\r\n    vec4 texFrom = vec4(\r\n    getFromColor(p + dm_progress*disp*(1.0 - colorSeparation)).r,\r\n    getFromColor(p + dm_progress*disp).g,\r\n    getFromColor(p + dm_progress*disp*(1.0 + colorSeparation)).b,\r\n    1.0);\r\n    return texTo*dm_progress + texFrom*inv;\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "ButterflyWaveScrawler",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "smoothness",
+        "value": 0.3
+      },
+      {
+        "key": "opening",
+        "value": 1.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float smoothness; // = 0.3\r\nuniform float opening; // = 1.0\r\n\r\nconst vec2 center = vec2(0.5, 0.5);\r\nconst float SQRT_2 = 1.414213562373;\r\n\r\nvec4 transition (vec2 uv) {\r\n    float x = opening==1.0 ? dm_progress : 1.-dm_progress;\r\n    float m = smoothstep(-smoothness, 0.0, SQRT_2*distance(center, uv) - x*(1.+smoothness));\r\n    return mix(getFromColor(uv), getToColor(uv), opening==1.0 ? 1.-m : m);\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "circleopen",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "power",
+        "value": 5.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float power; // = 5.0\r\n\r\nvec4 transition(vec2 p) {\r\n    vec4 fTex = getFromColor(p);\r\n    vec4 tTex = getToColor(p);\r\n    float m = step(distance(fTex, tTex), dm_progress);\r\n    return mix(\r\n    mix(fTex, tTex, m),\r\n    tTex,\r\n    pow(dm_progress, power)\r\n    );\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "ColourDistance",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "a",
+        "value": 4.0
+      },
+      {
+        "key": "b",
+        "value": 1.0
+      },
+      {
+        "key": "amplitude",
+        "value": 120.0
+      },
+      {
+        "key": "smoothness",
+        "value": 0.1
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float a; // = 4\r\nuniform float b; // = 1\r\nuniform float amplitude; // = 120\r\nuniform float smoothness; // = 0.1\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 p = uv.xy / vec2(1.0).xy;\r\n    vec2 dir = p - vec2(.5);\r\n    float dist = length(dir);\r\n    float x = (a - b) * cos(dm_progress) + b * cos(dm_progress * ((a / b) - 1.) );\r\n    float y = (a - b) * sin(dm_progress) - b * sin(dm_progress * ((a / b) - 1.));\r\n    vec2 offset = dir * vec2(sin(dm_progress  * dist * amplitude * x), sin(dm_progress * dist * amplitude * y)) / smoothness;\r\n    return mix(getFromColor(p + offset), getToColor(p), smoothstep(0.2, 1.0, dm_progress));\r\n}\r\n\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "CrazyParametricFun",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "x_start",
+        "value": 0.5
+      },
+      {
+        "key": "y_start",
+        "value": 0.5
+      },
+      {
+        "key": "threshold",
+        "value": 3.0
+      },
+      {
+        "key": "fadeEdge",
+        "value": 0.1
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\n\r\nuniform float x_start; // = 0.5\r\nuniform float y_start; // = 0.5\r\nuniform float threshold; // = 3.0\r\nuniform float fadeEdge; // = 0.1\r\n\r\nfloat rand(vec2 co) {\r\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\n\r\nvec4 transition(vec2 p) {\r\n    vec2 center=vec2(x_start,y_start);\r\n    float dist = distance(center, p) / threshold;\r\n    float r = dm_progress - min(rand(vec2(p.y, 0.0)), rand(vec2(0.0, p.x)));\r\n    return mix(getFromColor(p), getToColor(p), mix(0.0, mix(step(dist, r), 1.0, smoothstep(1.0-fadeEdge, 1.0, dm_progress)), smoothstep(0.0, fadeEdge, dm_progress)));\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "crosshatch",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec4 transition(vec2 p) {\r\n    float x = dm_progress;\r\n    x=smoothstep(.0,1.0,(x*2.0+p.x-1.0));\r\n    return mix(getFromColor((p-.5)*(1.-x)+.5), getToColor((p-.5)*x+.5), x);\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "crosswarp",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "strength",
+        "value": 0.4
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float strength; // = 0.4\r\n\r\nconst float PI = 3.141592653589793;\r\n\r\nfloat Linear_ease(in float begin, in float change, in float duration, in float time) {\r\n    return change * time / duration + begin;\r\n}\r\n\r\nfloat Exponential_easeInOut(in float begin, in float change, in float duration, in float time) {\r\n    if (time == 0.0)\r\n    return begin;\r\n    else if (time == duration)\r\n    return begin + change;\r\n    time = time / (duration / 2.0);\r\n    if (time < 1.0)\r\n    return change / 2.0 * pow(2.0, 10.0 * (time - 1.0)) + begin;\r\n    return change / 2.0 * (-pow(2.0, -10.0 * (time - 1.0)) + 2.0) + begin;\r\n}\r\n\r\nfloat Sinusoidal_easeInOut(in float begin, in float change, in float duration, in float time) {\r\n    return -change / 2.0 * (cos(PI * time / duration) - 1.0) + begin;\r\n}\r\n\r\nfloat rand (vec2 co) {\r\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\n\r\nvec3 crossFade(in vec2 uv, in float dissolve) {\r\n    return mix(getFromColor(uv).rgb, getToColor(uv).rgb, dissolve);\r\n}\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 texCoord = uv.xy / vec2(1.0).xy;\r\n\r\n    // Linear interpolate center across center half of the image\r\n    vec2 center = vec2(Linear_ease(0.25, 0.5, 1.0, dm_progress), 0.5);\r\n    float dissolve = Exponential_easeInOut(0.0, 1.0, 1.0, dm_progress);\r\n\r\n    // Mirrored sinusoidal loop. 0->strength then strength->0\r\n    float strength = Sinusoidal_easeInOut(0.0, strength, 0.5, dm_progress);\r\n\r\n    vec3 color = vec3(0.0);\r\n    float total = 0.0;\r\n    vec2 toCenter = center - texCoord;\r\n\r\n    /* randomize the lookup values to hide the fixed number of samples */\r\n    float offset = rand(uv);\r\n\r\n    for (float t = 0.0; t <= 40.0; t++) {\r\n        float percent = (t + offset) / 40.0;\r\n        float weight = 4.0 * (percent - percent * percent);\r\n        color += crossFade(texCoord + toCenter * percent * strength, dissolve) * weight;\r\n        total += weight;\r\n    }\r\n    return vec4(color / total, 1.0);\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "CrossZoom",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "persp",
+        "value": 0.7
+      },
+      {
+        "key": "unzoom",
+        "value": 0.3
+      },
+      {
+        "key": "reflection",
+        "value": 0.4
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float persp;// = 0.7\r\nuniform float unzoom;// = 0.3\r\nuniform float reflection;// = 0.4\r\nvec2 project (vec2 p) {\r\n    //-0.02 floating\r\n    return  p * vec2(1.0,0.0) + fract(vec2(0.0, 1.0+p.y-0.02));\r\n}\r\n\r\nbool inBounds (vec2 p) {\r\n    return all(lessThan(vec2(0.0), p)) && all(lessThan(p, vec2(1.0)));\r\n}\r\n\r\nvec4 bgColor (vec2 p, vec2 pfr, vec2 pto) {\r\n    vec4 c = vec4(0.0, 0.0, 0.0, 1.0);\r\n    pfr = project(pfr);\r\n    // FIXME avoid branching might help perf!\r\n    if (inBounds(pfr)) {\r\n        vec2 fuc=fract(vec2(pfr));\r\n        fuc.y=1.0-fuc.y;\r\n        vec4 temp= getFromColor(fuc);\r\n\r\n        c += mix(vec4(0.0), temp, reflection * mix(1.0, 0.0, pfr.y));\r\n    }\r\n    pto = project(pto);\r\n    if (inBounds(pto)) {\r\n        vec2 fuc=fract(vec2(pto));\r\n        fuc.y=1.0-fuc.y;\r\n        vec4 temp=getToColor(fuc);\r\n        c += mix(vec4(0.0), temp, reflection * mix(1.0, 0.0, pto.y));\r\n    }\r\n    return c;\r\n}\r\n\r\n// p : the position\r\n// persp : the perspective in [ 0, 1 ]\r\n// center : the xcenter in [0, 1] \\ 0.5 excluded\r\nvec2 xskew (vec2 p, float persp, float center) {\r\n    float x = mix(p.x, 1.0-p.x, center);\r\n    return (\r\n    (\r\n    vec2(x, (p.y - 0.5*(1.0-persp) * x) / (1.0+(persp-1.0)*x))\r\n    - vec2(0.5-distance(center, 0.5), 0.0)\r\n    )\r\n    * vec2(0.5 / distance(center, 0.5) * (center<0.5 ? 1.0 : -1.0), 1.0)\r\n    + vec2(center<0.5 ? 0.0 : 1.0, 0.0)\r\n    );\r\n}\r\n\r\nvec4 transition(vec2 op) {\r\n    float uz = unzoom * 2.0*(0.5-distance(0.5, dm_progress));\r\n    vec2 p = -uz*0.5+(1.0+uz) * op;\r\n    vec2 fromP = xskew(\r\n    (p - vec2(dm_progress, 0.0)) / vec2(1.0-dm_progress, 1.0),\r\n    1.0-mix(dm_progress, 0.0, persp),\r\n    0.0\r\n    );\r\n    vec2 toP = xskew(\r\n    p / vec2(dm_progress, 1.0),\r\n    mix(pow(dm_progress, 2.0), 1.0, persp),\r\n    1.0\r\n    );\r\n    // FIXME avoid branching might help perf!\r\n    if (inBounds(fromP)) {\r\n        return getFromColor(fromP);\r\n    }\r\n    else if (inBounds(toP)) {\r\n        return getToColor(toP);\r\n    }\r\n    return bgColor(op, fromP, toP);\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "cube_shadow_bottom",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "direction_x",
+        "value": 0.0
+      },
+      {
+        "key": "direction_y",
+        "value": 1.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\nvarying vec2 _uv;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){return texture2D(dm_from,uv); }\r\nvec4 getToColor(vec2 uv){return texture2D(dm_to,uv);}\r\n\r\n\r\nuniform float direction_x; // = 0.0\r\nuniform float direction_y; // = 1.0\r\nvec4 transition (vec2 uv) {\r\n    vec2 direction=vec2(direction_x,direction_y);\r\n    vec2 p = uv + dm_progress * sign(direction);\r\n    vec2 f = fract(p);\r\n    return mix(\r\n    getToColor(f),\r\n    getFromColor(f),\r\n    step(0.0, p.y) * step(p.y, 1.0) * step(0.0, p.x) * step(p.x, 1.0)\r\n    );\r\n}\r\n\r\nvoid main(void) {\r\n    gl_FragColor =transition(vTexCoord);\r\n\r\n}",
+    "name_file": "Directional",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "direction_x",
+        "value": 0.0
+      },
+      {
+        "key": "direction_y",
+        "value": 1.0
+      },
+      {
+        "key": "scale",
+        "value": 0.7
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n#define PI acos(-1.0)\r\n\r\nuniform float direction_x; // = 0.0\r\nuniform float direction_y; // = 1.0\r\nuniform float scale; // = 0.7\r\n\r\nfloat parabola(float x) {\r\n    float y = pow(sin(x * PI), 1.);\r\n    return y;\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec2 direction=vec2(direction_x,direction_y);\r\n    float easedProgress = pow(sin(dm_progress  * PI / 2.), 3.);\r\n    vec2 p = uv + easedProgress * sign(direction);\r\n    vec2 f = fract(p);\r\n\r\n    float s = 1. - (1. - (1. / scale)) * parabola(dm_progress);\r\n    f = (f - 0.5) * s  + 0.5;\r\n\r\n    float mixer = step(0.0, p.y) * step(p.y, 1.0) * step(0.0, p.x) * step(p.x, 1.0);\r\n    vec4 col = mix(getToColor(f), getFromColor(f), mixer);\r\n\r\n    float border = step(0., f.x) * step(0., (1. - f.x)) * step(0., f.y) * step(0., 1. - f.y);\r\n    col *= border;\r\n\r\n    return col;\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "DirectionalScaled",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "smoothness",
+        "value": 0.1
+      },
+      {
+        "key": "direction_x",
+        "value": -1.0
+      },
+      {
+        "key": "direction_y",
+        "value": 1.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float smoothness; // = 0.1\r\nuniform float direction_x; // = -1.0\r\nuniform float direction_y; // = 1.0\r\n\r\nconst vec2 center = vec2(0.5, 0.5);\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec2 direction=vec2(direction_x,direction_y);\r\n\r\n    vec2 v = normalize(direction);\r\n    v /= abs(v.x) + abs(v.y);\r\n    float d = v.x * center.x + v.y * center.y;\r\n    float m = 1.0 - smoothstep(-smoothness, 0.0, v.x * uv.x + v.y * uv.y - (d - 0.5 + dm_progress * (1.0 + smoothness)));\r\n    return mix(getFromColor((uv - 0.5) * (1.0 - m) + 0.5), getToColor((uv - 0.5) * m + 0.5), m);\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "directionalwarp",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "direction_x",
+        "value": 1.0
+      },
+      {
+        "key": "direction_y",
+        "value": -1.0
+      },
+      {
+        "key": "smoothness",
+        "value": 0.5
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float direction_x; // = 1.0\r\nuniform float direction_y; // = -1.0\r\nuniform float smoothness; // = 0.5\r\n\r\nconst vec2 center = vec2(0.5, 0.5);\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec2 direction=vec2(direction_x,direction_y);\r\n    vec2 v = normalize(direction);\r\n    v /= abs(v.x)+abs(v.y);\r\n    float d = v.x * center.x + v.y * center.y;\r\n    float m =\r\n    (1.0-step(dm_progress, 0.0)) * // there is something wrong with our formula that makes m not equals 0.0 with dm_progress is 0.0\r\n    (1.0 - smoothstep(-smoothness, 0.0, v.x * uv.x + v.y * uv.y - (d-0.5+dm_progress*(1.+smoothness))));\r\n    return mix(getFromColor(uv), getToColor(uv), m);\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "directionalwipe",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "uLineWidth",
+        "value": 0.1
+      },
+      {
+        "key": "uSpreadClr_x",
+        "value": 1.0
+      },
+      {
+        "key": "uSpreadClr_y",
+        "value": 0.0
+      },
+      {
+        "key": "uSpreadClr_z",
+        "value": 0.0
+      },
+      {
+        "key": "uHotClr_x",
+        "value": 0.9
+      },
+      {
+        "key": "uHotClr_y",
+        "value": 0.9
+      },
+      {
+        "key": "uHotClr_z",
+        "value": 0.2
+      },
+      {
+        "key": "uPow",
+        "value": 5.0
+      },
+      {
+        "key": "uIntensity",
+        "value": 1.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float uLineWidth;// = 0.1\r\nuniform float uSpreadClr_x;// = 1.0\r\nuniform float uSpreadClr_y;// = 0.0\r\nuniform float uSpreadClr_z;// = 0.0\r\nuniform float uHotClr_x;// = 0.9\r\nuniform float uHotClr_y;// = 0.9\r\nuniform float uHotClr_z;// = 0.2\r\nuniform float uPow;// = 5.0\r\nuniform float uIntensity;// = 1.0\r\n\r\nvec2 hash(vec2 p)  // replace this by something better\r\n{\r\n    p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));\r\n    return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);\r\n}\r\n\r\nfloat noise(in vec2 p) {\r\n    const float K1 = 0.366025404;  // (sqrt(3)-1)/2;\r\n    const float K2 = 0.211324865;  // (3-sqrt(3))/6;\r\n\r\n    vec2 i = floor(p + (p.x + p.y) * K1);\r\n    vec2 a = p - i + (i.x + i.y) * K2;\r\n    float m = step(a.y, a.x);\r\n    vec2 o = vec2(m, 1.0 - m);\r\n    vec2 b = a - o + K2;\r\n    vec2 c = a - 1.0 + 2.0 * K2;\r\n    vec3 h = max(0.5 - vec3(dot(a, a), dot(b, b), dot(c, c)), 0.0);\r\n    vec3 n = h * h * h * h * vec3(dot(a, hash(i + 0.0)), dot(b, hash(i + o)), dot(c, hash(i + 1.0)));\r\n    return dot(n, vec3(70.0));\r\n}\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec4 from = getFromColor(uv);\r\n    vec4 to = getToColor(uv);\r\n    vec4 outColor;\r\n    float burn;\r\n    burn = 0.5 + 0.5 * (0.299 * from.r + 0.587 * from.g + 0.114 * from.b);\r\n    vec3 uSpreadClr=vec3(uSpreadClr_x,uSpreadClr_y,uSpreadClr_z);\r\n    vec3 uHotClr=vec3(uHotClr_x,uHotClr_y,uHotClr_z);\r\n    float show = burn - dm_progress;\r\n    if (show < 0.001) {\r\n        outColor = to;\r\n    } else {\r\n        float factor = 1.0 - smoothstep(0.0, uLineWidth, show);\r\n        vec3 burnColor = mix(uSpreadClr, uHotClr, factor);\r\n        burnColor = pow(burnColor, vec3(uPow)) * uIntensity;\r\n        vec3 finalRGB = mix(from.rgb, burnColor, factor * step(0.0001, dm_progress));\r\n        outColor = vec4(finalRGB * from.a, from.a);\r\n    }\r\n    return outColor;\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "dissolve",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "bars",
+        "value": 30.0
+      },
+      {
+        "key": "amplitude",
+        "value": 2.0
+      },
+      {
+        "key": "noise",
+        "value": 0.1
+      },
+      {
+        "key": "frequency",
+        "value": 0.5
+      },
+      {
+        "key": "dripScale",
+        "value": 0.5
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n// Number of total bars/columns\r\nuniform float bars; // = 30\r\n\r\n// Multiplier for speed ratio. 0 = no variation when going down, higher = some elements go much faster\r\nuniform float amplitude; // = 2\r\n\r\n// Further variations in speed. 0 = no noise, 1 = super noisy (ignore frequency)\r\nuniform float noise; // = 0.1\r\n\r\n// Speed variation horizontally. the bigger the value, the shorter the waves\r\nuniform float frequency; // = 0.5\r\n\r\n// How much the bars seem to \"run\" from the middle of the screen first (sticking to the sides). 0 = no drip, 1 = curved drip\r\nuniform float dripScale; // = 0.5\r\n\r\n\r\n// The code proper --------\r\n\r\nfloat rand(int num) {\r\n    return fract(mod(float(num) * 67123.313, 12.0) * sin(float(num) * 10.3) * cos(float(num)));\r\n}\r\n\r\nfloat wave(int num) {\r\n    float fn = float(num) * frequency * 0.1 * float(bars);\r\n    return cos(fn * 0.5) * cos(fn * 0.13) * sin((fn+10.0) * 0.3) / 2.0 + 0.5;\r\n}\r\n\r\nfloat drip(int num) {\r\n    return sin(float(num) / (bars - 1.0) * 3.141592) * dripScale;\r\n}\r\n\r\nfloat pos(int num) {\r\n    return (noise == 0.0 ? wave(num) : mix(wave(num), rand(num), noise)) + (dripScale == 0.0 ? 0.0 : drip(num));\r\n}\r\n\r\nvec4 transition(vec2 uv) {\r\n    int bar = int(uv.x * bars);\r\n    float scale = 1.0 + pos(bar) * amplitude;\r\n    float phase = dm_progress * scale;\r\n    float posY = uv.y / vec2(1.0).y;\r\n    vec2 p;\r\n    vec4 c;\r\n    if (phase + posY < 1.0) {\r\n        p = vec2(uv.x, uv.y + mix(0.0, vec2(1.0).y, phase)) / vec2(1.0).xy;\r\n        c = getFromColor(p);\r\n    } else {\r\n        p = uv.xy / vec2(1.0).xy;\r\n        c = getToColor(p);\r\n    }\r\n\r\n    // Finally, apply the color\r\n    return c;\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "DoomScreenTransition_BOTTOM_TOP",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "bars",
+        "value": 30.0
+      },
+      {
+        "key": "amplitude",
+        "value": 2.0
+      },
+      {
+        "key": "noise",
+        "value": 0.1
+      },
+      {
+        "key": "frequency",
+        "value": 0.5
+      },
+      {
+        "key": "dripScale",
+        "value": 0.5
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n// Number of total bars/columns\r\nuniform float bars;// = 30\r\n\r\n// Multiplier for speed ratio. 0 = no variation when going down, higher = some elements go much faster\r\nuniform float amplitude;// = 2\r\n\r\n// Further variations in speed. 0 = no noise, 1 = super noisy (ignore frequency)\r\nuniform float noise;// = 0.1\r\n\r\n// Speed variation horizontally. the bigger the value, the shorter the waves\r\nuniform float frequency;// = 0.5\r\n\r\n// How much the bars seem to \"run\" from the middle of the screen first (sticking to the sides). 0 = no drip, 1 = curved drip\r\nuniform float dripScale;// = 0.5\r\n\r\n\r\n// The code proper --------\r\n\r\nfloat rand(int num) {\r\n    return fract(mod(float(num) * 67123.313, 12.0) * sin(float(num) * 10.3) * cos(float(num)));\r\n}\r\n\r\nfloat wave(int num) {\r\n    float fn = float(num) * frequency * 0.1 * float(bars);\r\n    return cos(fn * 0.5) * cos(fn * 0.13) * sin((fn+10.0) * 0.3) / 2.0 + 0.5;\r\n}\r\n\r\nfloat drip(int num) {\r\n    return sin(float(num) / (bars - 1.0) * 3.141592) * dripScale;\r\n}\r\n\r\nfloat pos(int num) {\r\n    return (noise == 0.0 ? wave(num) : mix(wave(num), rand(num), noise)) + (dripScale == 0.0 ? 0.0 : drip(num));\r\n}\r\n\r\nvec4 transition(vec2 uv) {\r\n    int bar = int(uv.y * bars);\r\n    float scale = 1.0 + pos(bar) * amplitude;\r\n    float phase = dm_progress * scale;\r\n    float posX =1.0- uv.x / vec2(1.0).x;\r\n    vec2 p;\r\n    vec4 c;\r\n    if (phase + posX < 1.0) {\r\n        p = vec2(uv.x - mix(0.0, vec2(1.0).x, phase), uv.y) / vec2(1.0).xy;\r\n        c = getFromColor(p);\r\n    } else {\r\n        p = uv.xy / vec2(1.0).xy;\r\n        c = getToColor(p);\r\n    }\r\n\r\n    // Finally, apply the color\r\n    return c;\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "DoomScreenTransition_LEFT_RIGHT",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "bars",
+        "value": 30.0
+      },
+      {
+        "key": "amplitude",
+        "value": 2.0
+      },
+      {
+        "key": "noise",
+        "value": 0.1
+      },
+      {
+        "key": "frequency",
+        "value": 0.5
+      },
+      {
+        "key": "dripScale",
+        "value": 0.5
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n// Number of total bars/columns\r\nuniform float bars;// = 30\r\n\r\n// Multiplier for speed ratio. 0 = no variation when going down, higher = some elements go much faster\r\nuniform float amplitude;// = 2\r\n\r\n// Further variations in speed. 0 = no noise, 1 = super noisy (ignore frequency)\r\nuniform float noise;// = 0.1\r\n\r\n// Speed variation horizontally. the bigger the value, the shorter the waves\r\nuniform float frequency;// = 0.5\r\n\r\n// How much the bars seem to \"run\" from the middle of the screen first (sticking to the sides). 0 = no drip, 1 = curved drip\r\nuniform float dripScale;// = 0.5\r\n\r\n\r\n// The code proper --------\r\n\r\nfloat rand(int num) {\r\n    return fract(mod(float(num) * 67123.313, 12.0) * sin(float(num) * 10.3) * cos(float(num)));\r\n}\r\n\r\nfloat wave(int num) {\r\n    float fn = float(num) * frequency * 0.1 * float(bars);\r\n    return cos(fn * 0.5) * cos(fn * 0.13) * sin((fn+10.0) * 0.3) / 2.0 + 0.5;\r\n}\r\n\r\nfloat drip(int num) {\r\n    return sin(float(num) / (bars - 1.0) * 3.141592) * dripScale;\r\n}\r\n\r\nfloat pos(int num) {\r\n    return (noise == 0.0 ? wave(num) : mix(wave(num), rand(num), noise)) + (dripScale == 0.0 ? 0.0 : drip(num));\r\n}\r\n\r\nvec4 transition(vec2 uv) {\r\n    int bar = int(uv.y * bars);\r\n    float scale = 1.0 + pos(bar) * amplitude;\r\n    float phase = dm_progress * scale;\r\n    float posX =uv.x / vec2(1.0).x;\r\n    vec2 p;\r\n    vec4 c;\r\n    if (phase + posX < 1.0) {\r\n        p = vec2(uv.x +mix(0.0, vec2(1.0).x, phase), uv.y) / vec2(1.0).xy;\r\n        c = getFromColor(p);\r\n    } else {\r\n        p = uv.xy / vec2(1.0).xy;\r\n        c = getToColor(p);\r\n    }\r\n\r\n    // Finally, apply the color\r\n    return c;\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "DoomScreenTransition_RIGHT_LEFT",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "bars",
+        "value": 30.0
+      },
+      {
+        "key": "amplitude",
+        "value": 2.0
+      },
+      {
+        "key": "noise",
+        "value": 0.1
+      },
+      {
+        "key": "frequency",
+        "value": 0.5
+      },
+      {
+        "key": "dripScale",
+        "value": 0.5
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n// Number of total bars/columns\r\nuniform float bars;// = 30\r\n\r\n// Multiplier for speed ratio. 0 = no variation when going down, higher = some elements go much faster\r\nuniform float amplitude;// = 2\r\n\r\n// Further variations in speed. 0 = no noise, 1 = super noisy (ignore frequency)\r\nuniform float noise;// = 0.1\r\n\r\n// Speed variation horizontally. the bigger the value, the shorter the waves\r\nuniform float frequency;// = 0.5\r\n\r\n// How much the bars seem to \"run\" from the middle of the screen first (sticking to the sides). 0 = no drip, 1 = curved drip\r\nuniform float dripScale;// = 0.5\r\n\r\n\r\n// The code proper --------\r\n\r\nfloat rand(int num) {\r\n    return fract(mod(float(num) * 67123.313, 12.0) * sin(float(num) * 10.3) * cos(float(num)));\r\n}\r\n\r\nfloat wave(int num) {\r\n    float fn = float(num) * frequency * 0.1 * float(bars);\r\n    return cos(fn * 0.5) * cos(fn * 0.13) * sin((fn+10.0) * 0.3) / 2.0 + 0.5;\r\n}\r\n\r\nfloat drip(int num) {\r\n    return sin(float(num) / (bars - 1.0) * 3.141592) * dripScale;\r\n}\r\n\r\nfloat pos(int num) {\r\n    return (noise == 0.0 ? wave(num) : mix(wave(num), rand(num), noise)) + (dripScale == 0.0 ? 0.0 : drip(num));\r\n}\r\n\r\nvec4 transition(vec2 uv) {\r\n    int bar = int(uv.x * bars);\r\n    float scale = 1.0 + pos(bar) * amplitude;\r\n    float phase = dm_progress * scale;\r\n    float posY =1.0- uv.y / vec2(1.0).y;\r\n    vec2 p;\r\n    vec4 c;\r\n    if (phase + posY < 1.0) {\r\n        p = vec2(uv.x, uv.y - mix(0.0, vec2(1.0).y, phase)) / vec2(1.0).xy;\r\n        c = getFromColor(p);\r\n    } else {\r\n        p = uv.xy / vec2(1.0).xy;\r\n        c = getToColor(p);\r\n    }\r\n\r\n    // Finally, apply the color\r\n    return c;\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "DoomScreenTransition_TOP_BOTTOM",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "reflection",
+        "value": 0.4
+      },
+      {
+        "key": "perspective",
+        "value": 0.4
+      },
+      {
+        "key": "depth",
+        "value": 3.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float reflection; // = 0.4\r\nuniform float perspective; // = 0.4\r\nuniform float depth; // = 3.0\r\n\r\nconst vec4 black = vec4(0.0, 0.0, 0.0, 1.0);\r\nconst vec2 boundMin = vec2(0.0, 0.0);\r\nconst vec2 boundMax = vec2(1.0, 1.0);\r\n\r\nbool inBounds (vec2 p) {\r\n    return all(lessThan(boundMin, p)) && all(lessThan(p, boundMax));\r\n}\r\n\r\nvec2 project (vec2 p) {\r\n    return p * vec2(1.0, -1.2) + vec2(0.0, -0.02);\r\n}\r\n\r\nvec4 bgColor (vec2 p, vec2 pto) {\r\n    vec4 c = black;\r\n    pto = project(pto);\r\n    if (inBounds(pto)) {\r\n        c += mix(black, getToColor(pto), reflection * mix(1.0, 0.0, pto.y));\r\n    }\r\n    return c;\r\n}\r\n\r\n\r\nvec4 transition (vec2 p) {\r\n    vec2 pfr = vec2(-1.), pto = vec2(-1.);\r\n    float middleSlit = 2.0 * abs(p.x-0.5) - dm_progress;\r\n    if (middleSlit > 0.0) {\r\n        pfr = p + (p.x > 0.5 ? -1.0 : 1.0) * vec2(0.5*dm_progress, 0.0);\r\n        float d = 1.0/(1.0+perspective*dm_progress*(1.0-middleSlit));\r\n        pfr.y -= d/2.;\r\n        pfr.y *= d;\r\n        pfr.y += d/2.;\r\n    }\r\n    float size = mix(1.0, depth, 1.-dm_progress);\r\n    pto = (p + vec2(-0.5, -0.5)) * vec2(size, size) + vec2(0.5, 0.5);\r\n    if (inBounds(pfr)) {\r\n        return getFromColor(pfr);\r\n    }\r\n    else if (inBounds(pto)) {\r\n        return getToColor(pto);\r\n    }\r\n    else {\r\n        return bgColor(p, pto);\r\n    }\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "doorway",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec2 offset(float dm_progress, float x, float theta) {\r\n    float phase = dm_progress*dm_progress + dm_progress + theta;\r\n    float shifty = 0.03*dm_progress*cos(10.0*(dm_progress+x));\r\n    return vec2(0, shifty);\r\n}\r\nvec4 transition(vec2 p) {\r\n    return mix(getFromColor(p + offset(dm_progress, p.x, 0.0)), getToColor(p + offset(1.0-dm_progress, p.x, 3.14)), dm_progress);\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "Dreamy",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "rotation",
+        "value": 6.0
+      },
+      {
+        "key": "scale",
+        "value": 1.2
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\nuniform float dm_ratio;\r\n\r\n// Definitions --------\r\n#define DEG2RAD 0.03926990816987241548078304229099 // 1/180*PI\r\n\r\n\r\n// Transition parameters --------\r\n\r\n// In degrees\r\nuniform float rotation; // = 6.0\r\n\r\n// Multiplier\r\nuniform float scale; // = 1.2\r\n\r\n\r\n// The code proper --------\r\n\r\nvec4 transition(vec2 uv) {\r\n    // Massage parameters\r\n    float phase = dm_progress < 0.5 ? dm_progress * 2.0 : (dm_progress - 0.5) * 2.0;\r\n    float angleOffset = dm_progress < 0.5 ? mix(0.0, rotation * DEG2RAD, phase) : mix(-rotation * DEG2RAD, 0.0, phase);\r\n    float newScale = dm_progress < 0.5 ? mix(1.0, scale, phase) : mix(scale, 1.0, phase);\r\n\r\n    vec2 center = vec2(0, 0);\r\n\r\n    // Calculate the source point\r\n    vec2 assumedCenter = vec2(0.5, 0.5);\r\n    vec2 p = (uv.xy - vec2(0.5, 0.5)) / newScale * vec2(dm_ratio, 1.0);\r\n\r\n    // This can probably be optimized (with distance())\r\n    float angle = atan(p.y, p.x) + angleOffset;\r\n    float dist = distance(center, p);\r\n    p.x = cos(angle) * dist / dm_ratio + 0.5;\r\n    p.y = sin(angle) * dist + 0.5;\r\n    vec4 c = dm_progress < 0.5 ? getFromColor(p) : getToColor(p);\r\n\r\n    // Finally, apply the color\r\n    return c + (dm_progress < 0.5 ? mix(0.0, 1.0, phase) : mix(1.0, 0.0, phase));\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "DreamyZoom",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec4 transition (vec2 uv) {\r\n    return mix(\r\n    getFromColor(uv),\r\n    getToColor(uv),\r\n    dm_progress\r\n    );\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "fade",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "color_r",
+        "value": 0.0
+      },
+      {
+        "key": "color_g",
+        "value": 0.0
+      },
+      {
+        "key": "color_b",
+        "value": 0.0
+      },
+      {
+        "key": "colorPhase",
+        "value": 0.4
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float color_r;// = 0.0\r\nuniform float color_g;// = 0.0\r\nuniform float color_b;// = 0.0\r\nuniform float colorPhase;// = 0.4\r\n// if 0.0, there is no black phase, if 0.9, the black phase is very important\r\nvec4 transition (vec2 uv) {\r\n    vec3 color=vec3(color_r,color_g,color_b);\r\n    return mix(\r\n    mix(vec4(color, 1.0), getFromColor(uv), smoothstep(1.0-colorPhase, 0.0, dm_progress)),\r\n    mix(vec4(color, 1.0), getToColor(uv), smoothstep(    colorPhase, 1.0, dm_progress)),\r\n    dm_progress);\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "fadecolor",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "intensity",
+        "value": 0.3
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float intensity; // = 0.3\r\n// if 0.0, the image directly turn grayscale, if 0.9, the grayscale transition phase is very important\r\n\r\nvec3 grayscale (vec3 color) {\r\n    return vec3(0.2126*color.r + 0.7152*color.g + 0.0722*color.b);\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec4 fc = getFromColor(uv);\r\n    vec4 tc = getToColor(uv);\r\n    return mix(\r\n    mix(vec4(grayscale(fc.rgb), 1.0), fc, smoothstep(1.0-intensity, 0.0, dm_progress)),\r\n    mix(vec4(grayscale(tc.rgb), 1.0), tc, smoothstep(    intensity, 1.0, dm_progress)),\r\n    dm_progress);\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "fadegrayscale",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "size",
+        "value": 0.04
+      },
+      {
+        "key": "zoom",
+        "value": 50.0
+      },
+      {
+        "key": "colorSeparation",
+        "value": 0.3
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float size; // = 0.04\r\nuniform float zoom; // = 50.0\r\nuniform float colorSeparation; // = 0.3\r\n\r\nvec4 transition(vec2 p) {\r\n    float inv = 1. - dm_progress;\r\n    vec2 disp = size*vec2(cos(zoom*p.x), sin(zoom*p.y));\r\n    vec4 texTo = getToColor(p + inv*disp);\r\n    vec4 texFrom = vec4(\r\n    getFromColor(p + dm_progress*disp*(1.0 - colorSeparation)).r,\r\n    getFromColor(p + dm_progress*disp).g,\r\n    getFromColor(p + dm_progress*disp*(1.0 + colorSeparation)).b,\r\n    1.0);\r\n    return texTo*dm_progress + texFrom*inv;\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "flyeye",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nhighp float random(vec2 co)\r\n{\r\n    highp float a = 12.9898;\r\n    highp float b = 78.233;\r\n    highp float c = 43758.5453;\r\n    highp float dt= dot(co.xy ,vec2(a,b));\r\n    highp float sn= mod(dt,3.14);\r\n    return fract(sin(sn) * c);\r\n}\r\nfloat voronoi( in vec2 x ) {\r\n    vec2 p = floor( x );\r\n    vec2 f = fract( x );\r\n    float res = 8.0;\r\n    for( float j=-1.; j<=1.; j++ )\r\n    for( float i=-1.; i<=1.; i++ ) {\r\n        vec2  b = vec2( i, j );\r\n        vec2  r = b - f + random( p + b );\r\n        float d = dot( r, r );\r\n        res = min( res, d );\r\n    }\r\n    return sqrt( res );\r\n}\r\n\r\nvec2 displace(vec4 tex, vec2 texCoord, float dotDepth, float textureDepth, float strength) {\r\n    float b = voronoi(.003 * texCoord + 2.0);\r\n    float g = voronoi(0.2 * texCoord);\r\n    float r = voronoi(texCoord - 1.0);\r\n    vec4 dt = tex * 1.0;\r\n    vec4 dis = dt * dotDepth + 1.0 - tex * textureDepth;\r\n\r\n    dis.x = dis.x - 1.0 + textureDepth*dotDepth;\r\n    dis.y = dis.y - 1.0 + textureDepth*dotDepth;\r\n    dis.x *= strength;\r\n    dis.y *= strength;\r\n    vec2 res_uv = texCoord ;\r\n    res_uv.x = res_uv.x + dis.x - 0.0;\r\n    res_uv.y = res_uv.y + dis.y;\r\n    return res_uv;\r\n}\r\n\r\nfloat ease1(float t) {\r\n    return t == 0.0 || t == 1.0\r\n    ? t\r\n    : t < 0.5\r\n    ? +0.5 * pow(2.0, (20.0 * t) - 10.0)\r\n    : -0.5 * pow(2.0, 10.0 - (t * 20.0)) + 1.0;\r\n}\r\nfloat ease2(float t) {\r\n    return t == 1.0 ? t : 1.0 - pow(2.0, -10.0 * t);\r\n}\r\n\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 p = uv.xy / vec2(1.0).xy;\r\n    vec4 color1 = getFromColor(p);\r\n    vec4 color2 = getToColor(p);\r\n    vec2 disp = displace(color1, p, 0.33, 0.7, 1.0-ease1(dm_progress));\r\n    vec2 disp2 = displace(color2, p, 0.33, 0.5, ease2(dm_progress));\r\n    vec4 dColor1 = getToColor(disp);\r\n    vec4 dColor2 = getFromColor(disp2);\r\n    float val = ease1(dm_progress);\r\n    vec3 gray = vec3(dot(min(dColor2, dColor1).rgb, vec3(0.299, 0.587, 0.114)));\r\n    dColor2 = vec4(gray, 1.0);\r\n    dColor2 *= 2.0;\r\n    color1 = mix(color1, dColor2, smoothstep(0.0, 0.5, dm_progress));\r\n    color2 = mix(color2, dColor1, smoothstep(1.0, 0.5, dm_progress));\r\n    return mix(color1, color2, val);\r\n\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "GlitchDisplace",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){return texture2D(dm_from,uv);}\r\nvec4 getToColor(vec2 uv){return texture2D(dm_to,uv);}\r\n\r\nvec4 transition(vec2 p) {\r\n    vec2 block = floor(p.xy / vec2(16));\r\n    vec2 uv_noise = block / vec2(64);\r\n    uv_noise += floor(vec2(dm_progress) * vec2(1200.0, 3500.0)) / vec2(64);\r\n    vec2 dist = dm_progress > 0.0 ? (fract(uv_noise) - 0.5) * 0.3 *(1.0 -dm_progress) : vec2(0.0);\r\n    vec2 red = p + dist * 0.2;\r\n    vec2 green = p + dist * .3;\r\n    vec2 blue = p + dist * .5;\r\n\r\n    return vec4(mix(getFromColor(red), getToColor(red), dm_progress).r,mix(getFromColor(green), getToColor(green), dm_progress).g,mix(getFromColor(blue), getToColor(blue), dm_progress).b,1.0);\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "GlitchMemories",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "size_x",
+        "value": 4.0
+      },
+      {
+        "key": "size_y",
+        "value": 4.0
+      },
+      {
+        "key": "pause",
+        "value": 0.1
+      },
+      {
+        "key": "dividerWidth",
+        "value": 0.05
+      },
+      {
+        "key": "bgcolor_r",
+        "value": 0.0
+      },
+      {
+        "key": "bgcolor_g",
+        "value": 0.0
+      },
+      {
+        "key": "bgcolor_b",
+        "value": 0.0
+      },
+      {
+        "key": "bgcolor_a",
+        "value": 1.0
+      },
+      {
+        "key": "randomness",
+        "value": 0.1
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float size_x; // = 4.0\r\nuniform float size_y; // = 4.0\r\nuniform float pause; // = 0.1\r\nuniform float dividerWidth; // = 0.05\r\nuniform float bgcolor_r; // = 0.0\r\nuniform float bgcolor_g; // = 0.0\r\nuniform float bgcolor_b; // = 0.0\r\nuniform float bgcolor_a; // = 1.0\r\nuniform float randomness; // = 0.1\r\n\r\nfloat rand (vec2 co) {\r\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\n\r\nfloat getDelta(vec2 p) {\r\n    vec2 size=vec2(size_x,size_y);\r\n    vec2 rectanglePos = floor(vec2(size) * p);\r\n    vec2 rectangleSize = vec2(1.0 / vec2(size).x, 1.0 / vec2(size).y);\r\n    float top = rectangleSize.y * (rectanglePos.y + 1.0);\r\n    float bottom = rectangleSize.y * rectanglePos.y;\r\n    float left = rectangleSize.x * rectanglePos.x;\r\n    float right = rectangleSize.x * (rectanglePos.x + 1.0);\r\n    float minX = min(abs(p.x - left), abs(p.x - right));\r\n    float minY = min(abs(p.y - top), abs(p.y - bottom));\r\n    return min(minX, minY);\r\n}\r\n\r\nfloat getDividerSize() {\r\n    vec2 size=vec2(size_x,size_y);\r\n    vec2 rectangleSize = vec2(1.0 / vec2(size).x, 1.0 / vec2(size).y);\r\n    return min(rectangleSize.x, rectangleSize.y) * dividerWidth;\r\n}\r\n\r\nvec4 transition(vec2 p) {\r\n    vec4 bgcolor=vec4(bgcolor_r,bgcolor_g,bgcolor_b,bgcolor_a);\r\n    vec2 size=vec2(size_x,size_y);\r\n    if(dm_progress < pause) {\r\n        float currentProg = dm_progress / pause;\r\n        float a = 1.0;\r\n        if(getDelta(p) < getDividerSize()) {\r\n            a = 1.0 - currentProg;\r\n        }\r\n        return mix(bgcolor, getFromColor(p), a);\r\n    }\r\n    else if(dm_progress < 1.0 - pause){\r\n        if(getDelta(p) < getDividerSize()) {\r\n            return bgcolor;\r\n        } else {\r\n            float currentProg = (dm_progress - pause) / (1.0 - pause * 2.0);\r\n            vec2 q = p;\r\n            vec2 rectanglePos = floor(vec2(size) * q);\r\n\r\n            float r = rand(rectanglePos) - randomness;\r\n            float cp = smoothstep(0.0, 1.0 - r, currentProg);\r\n\r\n            float rectangleSize = 1.0 / vec2(size).x;\r\n            float delta = rectanglePos.x * rectangleSize;\r\n            float offset = rectangleSize / 2.0 + delta;\r\n\r\n            p.x = (p.x - offset)/abs(cp - 0.5)*0.5 + offset;\r\n            vec4 a = getFromColor(p);\r\n            vec4 b = getToColor(p);\r\n\r\n            float s = step(abs(vec2(size).x * (q.x - delta) - 0.5), abs(cp - 0.5));\r\n            return mix(bgcolor, mix(b, a, step(cp, 0.5)), s);\r\n        }\r\n    }\r\n    else {\r\n        float currentProg = (dm_progress - 1.0 + pause) / pause;\r\n        float a = 1.0;\r\n        if(getDelta(p) < getDividerSize()) {\r\n            a = currentProg;\r\n        }\r\n        return mix(bgcolor, getToColor(p), a);\r\n    }\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "GridFlip",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nfloat inHeart (vec2 p, vec2 center, float size) {\r\n    if (size==0.0) return 0.0;\r\n    vec2 o =  (center-p)/(1.6*size);\r\n    float a = o.x*o.x+o.y*o.y-0.3;\r\n    return step(a*a*a, o.x*o.x*o.y*o.y*o.y);\r\n}\r\nvec4 transition (vec2 uv) {\r\n    return mix(\r\n    getFromColor(uv),\r\n    getToColor(uv),\r\n    inHeart(uv, vec2(0.5, 0.5), dm_progress)\r\n    );\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "heart",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "steps",
+        "value": 50.0
+      },
+      {
+        "key": "horizontalHexagons",
+        "value": 20.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\nuniform float dm_ratio;\r\n\r\n\r\nuniform float steps; // = 50.0\r\nuniform float horizontalHexagons; //= 20.0\r\n\r\nstruct Hexagon {\r\n    float q;\r\n    float r;\r\n    float s;\r\n};\r\n\r\nHexagon createHexagon(float q, float r){\r\n    Hexagon hex;\r\n    hex.q = q;\r\n    hex.r = r;\r\n    hex.s = -q - r;\r\n    return hex;\r\n}\r\n\r\nHexagon roundHexagon(Hexagon hex){\r\n\r\n    float q = floor(hex.q + 0.5);\r\n    float r = floor(hex.r + 0.5);\r\n    float s = floor(hex.s + 0.5);\r\n\r\n    float deltaQ = abs(q - hex.q);\r\n    float deltaR = abs(r - hex.r);\r\n    float deltaS = abs(s - hex.s);\r\n\r\n    if (deltaQ > deltaR && deltaQ > deltaS)\r\n    q = -r - s;\r\n    else if (deltaR > deltaS)\r\n    r = -q - s;\r\n    else\r\n    s = -q - r;\r\n\r\n    return createHexagon(q, r);\r\n}\r\n\r\nHexagon hexagonFromPoint(vec2 point, float size) {\r\n\r\n    point.y /= dm_ratio;\r\n    point = (point - 0.5) / size;\r\n\r\n    float q = (sqrt(3.0) / 3.0) * point.x + (-1.0 / 3.0) * point.y;\r\n    float r = 0.0 * point.x + 2.0 / 3.0 * point.y;\r\n\r\n    Hexagon hex = createHexagon(q, r);\r\n    return roundHexagon(hex);\r\n\r\n}\r\n\r\nvec2 pointFromHexagon(Hexagon hex, float size) {\r\n\r\n    float x = (sqrt(3.0) * hex.q + (sqrt(3.0) / 2.0) * hex.r) * size + 0.5;\r\n    float y = (0.0 * hex.q + (3.0 / 2.0) * hex.r) * size + 0.5;\r\n\r\n    return vec2(x, y * dm_ratio);\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n    float dist = 2.0 * min(dm_progress, 1.0 - dm_progress);\r\n    dist = steps > 0.0 ? ceil(dist * steps) / steps : dist;\r\n\r\n    float size = (sqrt(3.0) / 3.0) * dist / horizontalHexagons;\r\n\r\n    vec2 point = dist > 0.0 ? pointFromHexagon(hexagonFromPoint(uv, size), size) : uv;\r\n\r\n    return mix(getFromColor(point), getToColor(point), dm_progress);\r\n\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "hexagonalize",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n    float s = 2.0 - abs((uv.y - 0.5) / (dm_progress - 1.0)) - 2.0 * dm_progress;\r\n\r\n    return mix(\r\n    getFromColor(uv),\r\n    getToColor(uv),\r\n    smoothstep(0.5, 0.0, s)\r\n    );\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "HorizontalClose",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n    float regress = 1.0 - dm_progress;\r\n\r\n    float s = 2.0 - abs((uv.y - 0.5) / (regress - 1.0)) - 2.0 * regress;\r\n\r\n    return mix(\r\n    getFromColor(uv),\r\n    getToColor(uv),\r\n    smoothstep(0.0, 0.5, s)\r\n    );\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "HorizontalOpen",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\n\r\nvec4 getFromColor(vec2 uv){return texture2D(dm_from,uv);}\r\nvec4 getToColor(vec2 uv){return texture2D(dm_to,uv);}\r\n\r\nconst float MIN_AMOUNT=-0.16;\r\nconst float MAX_AMOUNT=1.5;\r\n\r\nconst float PI=3.141592653589793;\r\n\r\nconst float scale=512.0;\r\nconst float sharpness=3.0;\r\n\r\n// 360 degrees * amount\r\n\r\nconst float cylinderRadius=1.0/PI/2.0;\r\n\r\nvec3 hitPoint(float hitAngle,float yc,vec3 point,mat3 rrotation)\r\n{\r\n    float hitPoint=hitAngle/(2.0*PI);\r\n    point.y=hitPoint;\r\n    return rrotation*point;\r\n}\r\n\r\nvec4 antiAlias(vec4 color1,vec4 color2,float distanc)\r\n{\r\n    distanc*=scale;\r\n    if(distanc< 0.0)return color2;\r\n    if(distanc>2.0)return color1;\r\n    float dd=pow(1.0-distanc/2.0,sharpness);\r\n    return((color2-color1)*dd)+color1;\r\n}\r\n\r\nfloat distanceToEdge(vec3 point)\r\n{\r\n    float dx=abs(point.x>0.5?1.0-point.x:point.x);\r\n    float dy=abs(point.y>0.5?1.0-point.y:point.y);\r\n    if(point.x< 0.0)dx=-point.x;\r\n    if(point.x>1.0)dx=point.x-1.0;\r\n    if(point.y< 0.0)dy=-point.y;\r\n    if(point.y>1.0)dy=point.y-1.0;\r\n    if((point.x< 0.0||point.x>1.0)&&(point.y< 0.0||point.y>1.0))return sqrt(dx*dx+dy*dy);\r\n    return min(dx,dy);\r\n}\r\n\r\nvec4 seeThrough(float yc,vec2 p,mat3 rotation,mat3 rrotation,float cylinderAngle)\r\n{\r\n    float hitAngle=PI-(acos(yc/cylinderRadius)-cylinderAngle);\r\n    vec3 point=hitPoint(hitAngle,yc,rotation*vec3(p,1.0),rrotation);\r\n    if(yc<=0.0&&(point.x< 0.0||point.y< 0.0||point.x>1.0||point.y>1.0))\r\n    {\r\n        return getToColor(p);\r\n    }\r\n\r\n    if(yc>0.0)return getFromColor(p);\r\n\r\n    vec4 color=getFromColor(point.xy);\r\n    vec4 tcolor=vec4(0.0);\r\n\r\n    return antiAlias(color,tcolor,distanceToEdge(point));\r\n}\r\n\r\nvec4 seeThroughWithShadow(float yc,vec2 p,vec3 point,mat3 rotation,mat3 rrotation,float cylinderAngle,float amount)\r\n{\r\n    float shadow=distanceToEdge(point)*30.0;\r\n    shadow=(1.0-shadow)/3.0;\r\n\r\n    if(shadow< 0.0)shadow=0.0;else shadow*=amount;\r\n\r\n    vec4 shadowColor=seeThrough(yc,p,rotation,rrotation,cylinderAngle);\r\n    shadowColor.r-=shadow;\r\n    shadowColor.g-=shadow;\r\n    shadowColor.b-=shadow;\r\n\r\n    return shadowColor;\r\n}\r\n\r\nvec4 backside(float yc,vec3 point)\r\n{\r\n    vec4 color=getFromColor(point.xy);\r\n    float gray=(color.r+color.b+color.g)/15.0;\r\n    gray+=(8.0/10.0)*(pow(1.0-abs(yc/cylinderRadius),2.0/10.0)/2.0+(5.0/10.0));\r\n    color.rgb=vec3(gray);\r\n    return color;\r\n}\r\n\r\nvec4 behindSurface(vec2 p,float yc,vec3 point,mat3 rrotation,float cylinderAngle,float amount)\r\n{\r\n    float shado=(1.0-((-cylinderRadius-yc)/amount*7.0))/6.0;\r\n    shado*=1.0-abs(point.x-0.5);\r\n\r\n    yc=(-cylinderRadius-cylinderRadius-yc);\r\n\r\n    float hitAngle=(acos(yc/cylinderRadius)+cylinderAngle)-PI;\r\n    point=hitPoint(hitAngle,yc,point,rrotation);\r\n\r\n    if(yc< 0.0&&point.x>=0.0&&point.y>=0.0&&point.x<=1.0&&point.y<=1.0&&(hitAngle<PI ||amount>0.5))\r\n    {\r\n        shado=1.0-(sqrt(pow(point.x-0.5,2.0)+pow(point.y-0.5,2.0))/(71.0/100.0));\r\n        shado*=pow(-yc/cylinderRadius,3.0);\r\n        shado*=0.5;\r\n    }\r\n    else\r\n    {\r\n        shado=0.0;\r\n    }\r\n    return vec4(getToColor(p).rgb-shado,1.0);\r\n}\r\n\r\nvec4 transition(vec2 p){\r\n    float amount=dm_progress*(MAX_AMOUNT-MIN_AMOUNT)+MIN_AMOUNT;\r\n    float cylinderCenter = amount;\r\n    float cylinderAngle=2.0*PI*amount;\r\n    const float angle=100.0*PI/180.0;\r\n    float c=cos(-angle);\r\n    float s=sin(-angle);\r\n\r\n    mat3 rotation=mat3(c,s,0,\r\n    -s,c,0,\r\n    -0.801,0.8900,1\r\n    );\r\n    c=cos(angle);\r\n    s=sin(angle);\r\n\r\n    mat3 rrotation=mat3(c,s,0,\r\n    -s,c,0,\r\n    0.98500,0.985,1\r\n    );\r\n\r\n    vec3 point=rotation*vec3(p,1.0);\r\n\r\n    float yc=point.y- cylinderCenter;\r\n\r\n    if(yc< -cylinderRadius)\r\n    {\r\n        // Behind surface\r\n        return behindSurface(p,yc,point,rrotation,cylinderAngle,amount);\r\n    }\r\n\r\n    if(yc>cylinderRadius)\r\n    {\r\n        // Flat surface\r\n        return getFromColor(p);\r\n    }\r\n\r\n    float hitAngle=(acos(yc/cylinderRadius)+cylinderAngle)-PI;\r\n\r\n    float hitAngleMod=mod(hitAngle,2.0*PI);\r\n    if((hitAngleMod>PI&&amount< 0.5)||(hitAngleMod>PI/2.0&&amount< 0.0))\r\n    {\r\n        return seeThrough(yc,p,rotation,rrotation,cylinderAngle);\r\n    }\r\n\r\n    point=hitPoint(hitAngle,yc,point,rrotation);\r\n\r\n    if(point.x< 0.0||point.y< 0.0||point.x>1.0||point.y>1.0)\r\n    {\r\n        return seeThroughWithShadow(yc,p,point,rotation,rrotation,cylinderAngle,amount);\r\n    }\r\n\r\n    vec4 color=backside(yc,point);\r\n\r\n    vec4 otherColor;\r\n    if(yc< 0.0)\r\n    {\r\n        float shado=1.0-(sqrt(pow(point.x-0.5,2.0)+pow(point.y-0.5,2.0))/0.71);\r\n        shado*=pow(-yc/cylinderRadius,3.0);\r\n        shado*=0.5;\r\n        otherColor=vec4(0.0,0.0,0.0,shado);\r\n    }\r\n    else\r\n    {\r\n        otherColor=getFromColor(p);\r\n    }\r\n\r\n    color=antiAlias(color,otherColor,cylinderRadius-abs(yc));\r\n\r\n    vec4 cl=seeThroughWithShadow(yc,p,point,rotation,rrotation,cylinderAngle,amount);\r\n    float dist=distanceToEdge(point);\r\n\r\n    return antiAlias(color,cl,dist);\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "InvertedPageCurl",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "speed",
+        "value": 1.0
+      },
+      {
+        "key": "angle",
+        "value": 1.0
+      },
+      {
+        "key": "power",
+        "value": 1.5
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float speed; // = 1.0\r\nuniform float angle; // = 1.0\r\nuniform float power; // = 1.5\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 p = uv.xy / vec2(1.0).xy;\r\n    vec2 q = p;\r\n    float t = pow(dm_progress, power)*speed;\r\n    p = p -0.5;\r\n    for (int i = 0; i < 7; i++) {\r\n        p = vec2(sin(t)*p.x + cos(t)*p.y, sin(t)*p.y - cos(t)*p.x);\r\n        t += angle;\r\n        p = abs(mod(p, 2.0) - 1.0);\r\n    }\r\n    abs(mod(p, 1.0));\r\n    return mix(\r\n    mix(getFromColor(q), getToColor(q), dm_progress),\r\n    mix(getFromColor(p), getToColor(p), dm_progress), 1.0 - 2.0*abs(dm_progress - 0.5));\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "kaleidoscope",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "intensity",
+        "value": 0.1
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\n\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float intensity; // = 0.1\r\nconst int passes = 6;\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec4 c1 = vec4(0.0);\r\n    vec4 c2 = vec4(0.0);\r\n\r\n    float disp = intensity*(0.5-distance(0.5, dm_progress));\r\n    for (int xi=0; xi<passes; xi++)\r\n    {\r\n        float x = float(xi) / float(passes) - 0.5;\r\n        for (int yi=0; yi<passes; yi++)\r\n        {\r\n            float y = float(yi) / float(passes) - 0.5;\r\n            vec2 v = vec2(x,y);\r\n            float d = disp;\r\n            c1 += getFromColor( uv + d*v);\r\n            c2 += getToColor( uv + d*v);\r\n        }\r\n    }\r\n    c1 /= float(passes*passes);\r\n    c2 /= float(passes*passes);\r\n    return mix(c1, c2, dm_progress);\r\n}\r\n\r\nvoid main(void) {\r\n    gl_FragColor =transition(vTexCoord);\r\n\r\n}",
+    "name_file": "LinearBlur",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){return texture2D(dm_from,uv);}\r\nvec4 getToColor(vec2 uv){return texture2D(dm_to,uv);}\r\n\r\nuniform sampler2D dm_u_mask;\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec4 maskVec4 = texture2D(dm_u_mask,uv);\r\n    return mix(\r\n    getToColor(uv),\r\n    getFromColor(uv),\r\n    step(dm_progress,maskVec4.a)\r\n    );\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "luma_mobile",
+    "name_luma_img": [
+      "luma_img_0.png",
+      "luma_img_1.png",
+      "luma_img_2.png",
+      "luma_img_3.png",
+      "luma_img_4.png",
+      "luma_img_5.png",
+      "luma_img_6.png",
+      "luma_img_7.png",
+      "luma_img_8.png"
+    ]
+  },
+  {
+    "vl_key": [
+      {
+        "key": "l_threshold",
+        "value": 0.8
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\n//luminance threshold\r\nuniform float l_threshold;// = 0.8\r\n\r\n//Random function borrowed from everywhere\r\nfloat rand(vec2 co){\r\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\n\r\nvec3 mod289(vec3 x) {\r\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\r\n}\r\n\r\nvec2 mod289(vec2 x) {\r\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\r\n}\r\n\r\nvec3 permute(vec3 x) {\r\n    return mod289(((x*34.0)+1.0)*x);\r\n}\r\n\r\nfloat snoise(vec2 v)\r\n{\r\n    const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0\r\n    0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)\r\n    -0.577350269189626,  // -1.0 + 2.0 * C.x\r\n    0.024390243902439); // 1.0 / 41.0\r\n    // First corner\r\n    vec2 i  = floor(v + dot(v, C.yy) );\r\n    vec2 x0 = v -   i + dot(i, C.xx);\r\n\r\n    // Other corners\r\n    vec2 i1;\r\n    //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0\r\n    //i1.y = 1.0 - i1.x;\r\n    i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\r\n    // x0 = x0 - 0.0 + 0.0 * C.xx ;\r\n    // x1 = x0 - i1 + 1.0 * C.xx ;\r\n    // x2 = x0 - 1.0 + 2.0 * C.xx ;\r\n    vec4 x12 = x0.xyxy + C.xxzz;\r\n    x12.xy -= i1;\r\n\r\n    // Permutations\r\n    i = mod289(i); // Avoid truncation effects in permutation\r\n    vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))\r\n    + i.x + vec3(0.0, i1.x, 1.0 ));\r\n\r\n    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);\r\n    m = m*m ;\r\n    m = m*m ;\r\n\r\n    // Gradients: 41 points uniformly over a line, mapped onto a diamond.\r\n    // The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)\r\n\r\n    vec3 x = 2.0 * fract(p * C.www) - 1.0;\r\n    vec3 h = abs(x) - 0.5;\r\n    vec3 ox = floor(x + 0.5);\r\n    vec3 a0 = x - ox;\r\n\r\n    // Normalise gradients implicitly by scaling m\r\n    // Approximation of: m *= inversesqrt( a0*a0 + h*h );\r\n    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\r\n\r\n    // Compute final noise value at P\r\n    vec3 g;\r\n    g.x  = a0.x  * x0.x  + h.x  * x0.y;\r\n    g.yz = a0.yz * x12.xz + h.yz * x12.yw;\r\n    return 130.0 * dot(m, g);\r\n}\r\n\r\n// Simplex noise -- end\r\n\r\nfloat luminance(vec4 color){\r\n    //(0.299*R + 0.587*G + 0.114*B)\r\n    return color.r*0.299+color.g*0.587+color.b*0.114;\r\n}\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n\r\n    //direction of movement :  0 : up, 1, down\r\n     float direction=1.0;// = 1\r\n\r\n    vec2 p = uv.xy / vec2(1.0).xy;\r\n    vec2 center = vec2(1.0, direction);\r\n    if (dm_progress == 0.0) {\r\n        return getFromColor(p);\r\n    } else if (dm_progress == 1.0) {\r\n        return getToColor(p);\r\n    } else {\r\n        float x = dm_progress;\r\n        float dist = distance(center, p)- dm_progress*exp(snoise(vec2(p.x, 0.0)));\r\n        float r = x - rand(vec2(p.x, 0.1));\r\n        float m = dist <= r && luminance(getFromColor(p))<l_threshold ? 1.0 : (dm_progress*dm_progress*dm_progress);\r\n        return mix(getFromColor(p), getToColor(p), m);\r\n    }\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "luminance_melt_bottom_top",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "l_threshold",
+        "value": 0.8
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n//luminance threshold\r\nuniform float l_threshold;// = 0.8\r\n\r\n//Random function borrowed from everywhere\r\nfloat rand(vec2 co){\r\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\n\r\n\r\n// Simplex noise :\r\n// Description : Array and textureless GLSL 2D simplex noise function.\r\n//      Author : Ian McEwan, Ashima Arts.\r\n//  Maintainer : ijm\r\n//     Lastmod : 20110822 (ijm)\r\n//     License : MIT\r\n//               2011 Ashima Arts. All rights reserved.\r\n//               Distributed under the MIT License. See LICENSE file.\r\n//               https://github.com/ashima/webgl-noise\r\n//\r\n\r\nvec3 mod289(vec3 x) {\r\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\r\n}\r\n\r\nvec2 mod289(vec2 x) {\r\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\r\n}\r\n\r\nvec3 permute(vec3 x) {\r\n    return mod289(((x*34.0)+1.0)*x);\r\n}\r\n\r\nfloat snoise(vec2 v)\r\n{\r\n    const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0\r\n    0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)\r\n    -0.577350269189626,  // -1.0 + 2.0 * C.x\r\n    0.024390243902439); // 1.0 / 41.0\r\n    // First corner\r\n    vec2 i  = floor(v + dot(v, C.yy) );\r\n    vec2 x0 = v -   i + dot(i, C.xx);\r\n\r\n    // Other corners\r\n    vec2 i1;\r\n    //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0\r\n    //i1.y = 1.0 - i1.x;\r\n    i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\r\n    // x0 = x0 - 0.0 + 0.0 * C.xx ;\r\n    // x1 = x0 - i1 + 1.0 * C.xx ;\r\n    // x2 = x0 - 1.0 + 2.0 * C.xx ;\r\n    vec4 x12 = x0.xyxy + C.xxzz;\r\n    x12.xy -= i1;\r\n\r\n    // Permutations\r\n    i = mod289(i); // Avoid truncation effects in permutation\r\n    vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))\r\n    + i.x + vec3(0.0, i1.x, 1.0 ));\r\n\r\n    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);\r\n    m = m*m ;\r\n    m = m*m ;\r\n\r\n    // Gradients: 41 points uniformly over a line, mapped onto a diamond.\r\n    // The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)\r\n\r\n    vec3 x = 2.0 * fract(p * C.www) - 1.0;\r\n    vec3 h = abs(x) - 0.5;\r\n    vec3 ox = floor(x + 0.5);\r\n    vec3 a0 = x - ox;\r\n\r\n    // Normalise gradients implicitly by scaling m\r\n    // Approximation of: m *= inversesqrt( a0*a0 + h*h );\r\n    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\r\n\r\n    // Compute final noise value at P\r\n    vec3 g;\r\n    g.x  = a0.x  * x0.x  + h.x  * x0.y;\r\n    g.yz = a0.yz * x12.xz + h.yz * x12.yw;\r\n    return 130.0 * dot(m, g);\r\n}\r\n\r\n// Simplex noise -- end\r\n\r\nfloat luminance(vec4 color){\r\n    //(0.299*R + 0.587*G + 0.114*B)\r\n    return color.r*0.299+color.g*0.587+color.b*0.114;\r\n}\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n\r\n    //direction of movement :  0 : up, 1, down\r\n     float direction=0.0;// = 1\r\n\r\n    vec2 p = uv.xy / vec2(1.0).xy;\r\n    vec2 center = vec2(1.0, direction);\r\n    if (dm_progress == 0.0) {\r\n        return getFromColor(p);\r\n    } else if (dm_progress == 1.0) {\r\n        return getToColor(p);\r\n    } else {\r\n        float x = dm_progress;\r\n        float dist = distance(center, p)- dm_progress*exp(snoise(vec2(p.x, 0.0)));\r\n        float r = x - rand(vec2(p.x, 0.1));\r\n        float m = dist <= r && luminance(getFromColor(p))<l_threshold ? 1.0 : (dm_progress*dm_progress*dm_progress);\r\n        return mix(getFromColor(p), getToColor(p), m);\r\n    }\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "luminance_melt_top_bottom",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "strength",
+        "value": 0.1
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float strength; // = 0.1\r\n\r\nvec4 transition(vec2 p) {\r\n    vec4 ca = getFromColor(p);\r\n    vec4 cb = getToColor(p);\r\n\r\n    vec2 oa = (((ca.rg+ca.b)*0.5)*2.0-1.0);\r\n    vec2 ob = (((cb.rg+cb.b)*0.5)*2.0-1.0);\r\n    vec2 oc = mix(oa,ob,0.5)*strength;\r\n\r\n    float w0 = dm_progress;\r\n    float w1 = 1.0-w0;\r\n    return mix(getFromColor(p+oc*w0), getToColor(p-oc*w1), dm_progress);\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "morph",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "endx",
+        "value": 2.0
+      },
+      {
+        "key": "endy",
+        "value": -1.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\n#define PI 3.14159265358979323\r\nuniform float endx; // = 2\r\nuniform float endy; // = -1\r\n\r\nfloat Rand(vec2 v) {\r\n    return fract(sin(dot(v.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\nvec2 Rotate(vec2 v, float a) {\r\n    mat2 rm = mat2(cos(a), -sin(a),\r\n    sin(a), cos(a));\r\n    return rm*v;\r\n}\r\nfloat CosInterpolation(float x) {\r\n    return -cos(x*PI)/2.+.5;\r\n}\r\nvec4 transition(vec2 uv) {\r\n    vec2 p = uv.xy / vec2(1.0).xy - .5;\r\n    vec2 rp = p;\r\n    float rpr = (dm_progress*2.-1.);\r\n    float z = -(rpr*rpr*2.) + 3.;\r\n    float az = abs(z);\r\n    rp *= az;\r\n    rp += mix(vec2(.5, .5), vec2(endx + .5, endy + .5),CosInterpolation(dm_progress));\r\n    vec2 mrp = mod(rp, 1.);\r\n    vec2 crp = rp;\r\n    bool onEnd = floor(crp.x)==endx&&floor(crp.y)==endy;\r\n    if(!onEnd) {\r\n        float ang = float(int(Rand(floor(crp))*4.))*.5*PI;\r\n        mrp = vec2(.5) + Rotate(mrp-vec2(.5), ang);\r\n    }\r\n    if(onEnd || Rand(floor(crp))>.5) {\r\n        return getToColor(mrp);\r\n    } else {\r\n        return getFromColor(mrp);\r\n    }\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "Mosaic",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "mosaicNum",
+        "value": 10.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\n\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float mosaicNum;// = 10.0\r\n\r\nvec2 getMosaicUV(vec2 uv) {\r\n    float mosaicWidth = 2.0 / mosaicNum * min(dm_progress, 1.0 - dm_progress);\r\n    float mX = floor(uv.x / mosaicWidth) + 0.5;\r\n    float mY = floor(uv.y / mosaicWidth) + 0.5;\r\n    return vec2(mX * mosaicWidth, mY * mosaicWidth);\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec2 mosaicUV = min(dm_progress, 1.0 - dm_progress) == 0.0 ? uv : getMosaicUV(uv);\r\n    return mix(getFromColor(mosaicUV), getToColor(mosaicUV), dm_progress * dm_progress);\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "mosaic_transition",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 blend(vec4 a, vec4 b) {\r\n    return a * b;\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n    vec4 blended = blend(getFromColor(uv), getToColor(uv));\r\n\r\n    if (dm_progress < 0.5)\r\n    return mix(getFromColor(uv), blended, 2.0 * dm_progress);\r\n    else\r\n    return mix(blended, getToColor(uv), 2.0 * dm_progress - 1.0);\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "multiply_blend",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec4 transition (vec2 uv) {\r\n    if (dm_progress == 0.0){\r\n        return getFromColor(uv);\r\n    }\r\n    vec2 leaf_uv = (uv - vec2(0.5))/10./pow(dm_progress, 3.5);\r\n    //danh cho mobile.\r\n    leaf_uv.y -= 0.0;//center\r\n    leaf_uv.y = -leaf_uv.y;\r\n    //danh cho destop se bi dao nguoc leaf_uv.y += 0.35;\r\n    float r = 0.18;\r\n    float o = atan(leaf_uv.y, leaf_uv.x);\r\n    //  float r0=r*(1.0+sin(o))*(1.0+0.9 * cos(8.0*o))*(1.0+0.1*cos(24.0*o))*(0.9+0.05*cos(200.0*o));\r\n    //r(θ) = sqrt(2) a ((1 - cos(θ))^(1/3) + (cos(θ) + 1)^(1/3))^(3/2)\r\n    float a=dm_progress;\r\n    float r0=sqrt(2.0)* a *pow((pow((1.0 - cos(o)), (1.0/3.0)) + pow((cos(o) + 1.0), (1.0/3.0))), (3.0/2.0));\r\n    float av2=1.0-step(1.0 - length(leaf_uv)+r0, 1.0);\r\n    return mix(getFromColor(uv), getToColor(uv), av2);\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "Nephroid",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "strength",
+        "value": 0.6
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float strength; //= 0.6\r\nconst float PI = 3.141592653589793;\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec4 from = getFromColor(uv);\r\n    vec4 to = getToColor(uv);\r\n\r\n    // Multipliers\r\n    float from_m = 1.0 - dm_progress + sin(PI * dm_progress) * strength;\r\n    float to_m = dm_progress + sin(PI * dm_progress) * strength;\r\n\r\n    return vec4(\r\n    from.r * from.a * from_m + to.r * to.a * to_m,\r\n    from.g * from.a * from_m + to.g * to.a * to_m,\r\n    from.b * from.a * from_m + to.b * to.a * to_m,\r\n    mix(from.a, to.a, dm_progress)\r\n    );\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "Overexposure",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "scale",
+        "value": 4.0
+      },
+      {
+        "key": "smoothness",
+        "value": 0.01
+      },
+      {
+        "key": "seed",
+        "value": 12.9898
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float scale; // = 4.0\r\nuniform float smoothness; // = 0.01\r\n\r\nuniform float seed; // = 12.9898\r\n\r\n// http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/\r\nfloat random(vec2 co)\r\n{\r\n    highp float a = seed;\r\n    highp float b = 78.233;\r\n    highp float c = 43758.5453;\r\n    highp float dt= dot(co.xy ,vec2(a,b));\r\n    highp float sn= mod(dt,3.14);\r\n    return fract(sin(sn) * c);\r\n}\r\n\r\n// 2D Noise based on Morgan McGuire @morgan3d\r\n// https://www.shadertoy.com/view/4dS3Wd\r\nfloat noise (in vec2 st) {\r\n    vec2 i = floor(st);\r\n    vec2 f = fract(st);\r\n\r\n    // Four corners in 2D of a tile\r\n    float a = random(i);\r\n    float b = random(i + vec2(1.0, 0.0));\r\n    float c = random(i + vec2(0.0, 1.0));\r\n    float d = random(i + vec2(1.0, 1.0));\r\n\r\n    // Smooth Interpolation\r\n\r\n    // Cubic Hermine Curve.  Same as SmoothStep()\r\n    vec2 u = f*f*(3.0-2.0*f);\r\n    // u = smoothstep(0.,1.,f);\r\n\r\n    // Mix 4 coorners porcentages\r\n    return mix(a, b, u.x) +\r\n    (c - a)* u.y * (1.0 - u.x) +\r\n    (d - b) * u.x * u.y;\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec4 from = getFromColor(uv);\r\n    vec4 to = getToColor(uv);\r\n    float n = noise(uv * scale);\r\n\r\n    float p = mix(-smoothness, 1.0 + smoothness, dm_progress);\r\n    float lower = p - smoothness;\r\n    float higher = p + smoothness;\r\n\r\n    float q = smoothstep(lower, higher, n);\r\n\r\n    return mix(\r\n    from,\r\n    to,\r\n    1.0 - q\r\n    );\r\n}\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "perlin",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "speed",
+        "value": 2.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float speed; // = 2.0\r\n\r\nvec4 transition(vec2 uv) {\r\n\r\n    vec2 p = uv.xy / vec2(1.0).xy;\r\n\r\n    float circPos = atan(p.y - 0.5, p.x - 0.5) + dm_progress * speed;\r\n    float modPos = mod(circPos, 3.1415 / 4.);\r\n    float signed = sign(dm_progress - modPos);\r\n\r\n    return mix(getToColor(p), getFromColor(p), step(signed, 0.5));\r\n\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "pinwheel",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "segments",
+        "value": 5.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\n#define PI 3.14159265359\r\n\r\nuniform float segments; // = 5.0\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n    float angle = atan(uv.x - 0.5, uv.y - 0.5) - 0.5 * PI;\r\n    float normalized = (angle + 1.5 * PI) * (2.0 * PI);\r\n\r\n    float radius = (cos(segments * angle) + 4.0) / 4.0;\r\n    float difference = length(uv - vec2(0.5, 0.5));\r\n\r\n    if (difference > radius * dm_progress)\r\n    return getFromColor(uv);\r\n    else\r\n    return getToColor(uv);\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "polar_function",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "dots",
+        "value": 20.0
+      },
+      {
+        "key": "start_x",
+        "value": 0.0
+      },
+      {
+        "key": "start_y",
+        "value": 0.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){return texture2D(dm_from,uv);}\r\nvec4 getToColor(vec2 uv){return texture2D(dm_to,uv);}\r\n\r\nconst float SQRT_2 = 1.414213562373;\r\nuniform float dots;// = 20.0\r\nuniform float start_x;// = 0.0\r\nuniform float start_y;// = 0.0\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 center=vec2(start_x,start_y);\r\n    bool nextImage = distance(fract(uv * dots), vec2(0.5, 0.5)) < ( dm_progress / distance(uv, center));\r\n    return nextImage ? getToColor(uv) : getFromColor(uv);\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "PolkaDotsCurtain",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "scale",
+        "value": 2.0
+      },
+      {
+        "key": "z",
+        "value": 1.5
+      },
+      {
+        "key": "speed",
+        "value": 5.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\nuniform float dm_ratio;\r\n\r\n\r\n#define PI 3.14159265358979\r\nconst float rad = 120.; // change this value to get different mirror effects\r\nconst float deg = rad / 180. * PI;\r\n\r\nuniform float scale; // = 2.0\r\nuniform float z; // = 1.5\r\nuniform float speed; // = 5.0\r\n\r\nvec2 refl(vec2 p,vec2 o,vec2 n)\r\n{\r\n    return 2.0*o+2.0*n*dot(p-o,n)-p;\r\n}\r\n\r\nvec2 rot(vec2 p, vec2 o, float a)\r\n{\r\n    float s = sin(a);\r\n    float c = cos(a);\r\n    return o + mat2(c, -s, s, c) * (p - o);\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n    float dist = scale / 10.;\r\n\r\n    vec2 uv0 = uv;\r\n    uv -= 0.5;\r\n    uv.x *= dm_ratio;\r\n    uv *= z;\r\n    uv = rot(uv, vec2(0.0), dm_progress*speed);\r\n    // uv.x = fract(uv.x/l/3.0)*l*3.0;\r\n    float theta = dm_progress*6.+PI/.5;\r\n    for(int iter = 0; iter < 10; iter++) {\r\n        for(float i = 0.; i < 2. * PI; i+=deg) {\r\n            float ts = sign(asin(cos(i))) == 1.0 ? 1.0 : 0.0;\r\n            if(((ts == 1.0) && (uv.y-dist*cos(i) > tan(i)*(uv.x+dist*+sin(i)))) || ((ts == 0.0) && (uv.y-dist*cos(i) < tan(i)*(uv.x+dist*+sin(i))))) {\r\n                uv = refl(vec2(uv.x+sin(i)*dist*2.,uv.y-cos(i)*dist*2.), vec2(0.,0.), vec2(cos(i),sin(i)));\r\n            }\r\n        }\r\n    }\r\n    uv += 0.5;\r\n    uv = rot(uv, vec2(0.5), dm_progress*-speed);\r\n    uv -= 0.5;\r\n    uv.x /= dm_ratio;\r\n    uv += 0.5;\r\n    uv = 2.*abs(uv/2.+floor(uv/2.+0.5));\r\n    //uv = 2.*abs(uv/2.-floor(uv/2.+0.5)); thanh -> uv = 2.*abs(uv/2.+floor(uv/2.+0.5))\r\n    // thi no ok hon. nhung no van khon smooth\r\n    vec2 uvMix = mix(uv,uv0,cos(dm_progress*PI*2.)/2.+0.5);\r\n    vec4 color = mix(getFromColor(uvMix),getToColor(uvMix),cos((dm_progress-1.)*PI)/2.+0.5);\r\n    return color;\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "powerKaleido",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "size_x",
+        "value": 10.0
+      },
+      {
+        "key": "size_y",
+        "value": 10.0
+      },
+      {
+        "key": "smoothness",
+        "value": 0.5
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float size_x; // = 10.0\r\nuniform float size_y; // = 10.0\r\nuniform float smoothness; // = 0.5\r\n\r\nfloat rand (vec2 co) {\r\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\n\r\nvec4 transition(vec2 p) {\r\n    vec2 size =vec2(size_x,size_y);\r\n    float r = rand(floor(size * p));\r\n    float m = smoothstep(0.0, -smoothness, r - (dm_progress * (1.0 + smoothness)));\r\n    return mix(getFromColor(p), getToColor(p), m);\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "randomsquares",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n\r\n    float s = pow(2.0 * abs(dm_progress - 0.5), 3.0);\r\n\r\n    vec2 q = uv.xy / vec2(1.0).xy;\r\n\r\n    // bottom-left\r\n    vec2 bl = step(vec2(1.0 - 2.0*abs(dm_progress - 0.5)), q + 0.25);\r\n\r\n    // top-right\r\n    vec2 tr = step(vec2(1.0 - 2.0*abs(dm_progress - 0.5)), 1.25 - q);\r\n\r\n    float dist = length(1.0 - bl.x * bl.y * tr.x * tr.y);\r\n\r\n    return mix(\r\n    dm_progress < 0.5 ? getFromColor(uv) : getToColor(uv),\r\n    getToColor(uv),\r\n    step(s, dist)\r\n    );\r\n\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "RectangleZoomIn",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition(vec2 p) {\r\n    float s = pow(2.0 * abs(dm_progress - 0.5), 3.0);\r\n    vec2 sq = p.xy / vec2(1.0).xy;\r\n\r\n    // bottom-left\r\n    vec2 bl = step(vec2(abs(1. - 2.*dm_progress)), sq + .25);\r\n    float dist = bl.x * bl.y;\r\n\r\n    // top-right\r\n    vec2 tr = step(vec2(abs(1. - 2.*dm_progress)), 1.25-sq);\r\n    dist *= 1. * tr.x * tr.y;\r\n\r\n    return mix(\r\n    dm_progress < 0.5 ? getFromColor(p) : getToColor(p),\r\n    getToColor(p),\r\n    step(s, dist)\r\n    );\r\n\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "RectangleZoomOut",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "amplitude",
+        "value": 100.0
+      },
+      {
+        "key": "speed",
+        "value": 50.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float amplitude; // = 100.0\r\nuniform float speed; // = 50.0\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec2 dir = uv - vec2(.5);\r\n    float dist = length(dir);\r\n    vec2 offset = dir * (sin(dm_progress * dist * amplitude - dm_progress * speed) + dm_progress) / 30.;\r\n    //vec2 offset = dir * (sin(dm_progress * dist * amplitude - dm_progress * speed) + .5) / 30.; tren dien thoai\r\n    //duy chuyen 3 4 lan se bi zoom xau, nen thay +0.5 => dm_progress\r\n    return mix(\r\n    getFromColor(uv + offset),\r\n    getToColor(uv),\r\n    smoothstep(0.2, 1.0, dm_progress)\r\n    );\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "ripple",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "type",
+        "value": 0.0
+      },
+      {
+        "key": "RotDown",
+        "value": 0.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\nuniform float dm_ratio;\r\n\r\nuniform float type; // = 0.0\r\nuniform float RotDown; // = 0.0\r\n// type (0-3): Rotate/Roll from which corner\r\n// RotDown: if true rotate old image down, otherwise rotate old image up\r\n\r\n#define M_PI 3.14159265358979323846\r\n\r\nvec4 transition(vec2 uv)\r\n{\r\n    float theta, c1, s1;\r\n    vec2 iResolution = vec2(dm_ratio, 1.0);\r\n    vec2 uvi;\r\n    // I used if/else instead of switch in case it's an old GPU\r\n    if (type == 0.0) { theta = (RotDown==1.0 ? M_PI : -M_PI) / 2.0 * dm_progress; uvi.x = 1.0 - uv.x; uvi.y = uv.y; }\r\n    else if (type == 1.0) { theta = (RotDown==1.0 ? M_PI : -M_PI) / 2.0 * dm_progress; uvi = uv; }\r\n    else if (type == 2.0) { theta = (RotDown==1.0 ? -M_PI : M_PI) / 2.0 * dm_progress; uvi.x = uv.x; uvi.y = 1.0 - uv.y; }\r\n    else if (type == 3.0) { theta = (RotDown==1.0 ? -M_PI : M_PI) / 2.0 * dm_progress; uvi = 1.0 - uv; }\r\n    else { theta = (RotDown==1.0 ? M_PI : -M_PI) / 2.0 * dm_progress; uvi.x = 1.0 - uv.x; uvi.y = uv.y; }\r\n    c1 = cos(theta); s1 = sin(theta);\r\n    vec2 uv2;\r\n    uv2.x = (uvi.x * iResolution.x * c1 - uvi.y * iResolution.y * s1);\r\n    uv2.y = (uvi.x * iResolution.x * s1 + uvi.y * iResolution.y * c1);\r\n    if ((uv2.x >= 0.0) && (uv2.x <= iResolution.x) && (uv2.y >= 0.0) && (uv2.y <= iResolution.y))\r\n    {\r\n        uv2 /= iResolution;\r\n        if (type == 0.0) { uv2.x = 1.0 - uv2.x; }\r\n        else if (type == 2.0) { uv2.y = 1.0 - uv2.y; }\r\n        else if (type == 3.0) { uv2 = 1.0 - uv2; }\r\n        return(getFromColor(uv2));\r\n    }\r\n    return(getToColor(uv));\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "Rolls",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "FadeInSecond",
+        "value": 1.0
+      },
+      {
+        "key": "ReverseEffect",
+        "value": 1.0
+      },
+      {
+        "key": "ReverseRotation",
+        "value": 1.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\nuniform float dm_ratio;\r\n\r\n\r\nuniform float FadeInSecond; // = 1.0\r\nuniform float ReverseEffect; // = 1.0\r\nuniform float ReverseRotation; // = 1.0\r\n\r\n#define M_PI 3.14159265358979323846\r\n#define _TWOPI 6.283185307179586476925286766559\r\n\r\nvec4 transition(vec2 uv)\r\n{\r\n    vec2 iResolution = vec2(dm_ratio, 1.0);\r\n    float t = ReverseEffect==1.0 ? (1.0 - dm_progress) : dm_progress;\r\n    float theta = ReverseRotation==1.0 ? _TWOPI * t : -_TWOPI * t;\r\n    float c1 = cos(theta);\r\n    float s1 = sin(theta);\r\n    float rad = max(0.00001, 1.0 - t);\r\n    float xc1 = (uv.x - 0.5) * iResolution.x;\r\n    float yc1 = (uv.y - 0.5) * iResolution.y;\r\n    float xc2 = (xc1 * c1 - yc1 * s1) / rad;\r\n    float yc2 = (xc1 * s1 + yc1 * c1) / rad;\r\n    vec2 uv2 = vec2(xc2 + iResolution.x / 2.0, yc2 + iResolution.y / 2.0);\r\n    vec4 col3;\r\n    vec4 ColorTo = ReverseEffect==1.0 ? getFromColor(uv) : getToColor(uv);\r\n    if ((uv2.x >= 0.0) && (uv2.x <= iResolution.x) && (uv2.y >= 0.0) && (uv2.y <= iResolution.y))\r\n    {\r\n        uv2 /= iResolution;\r\n        col3 = ReverseEffect==1.0 ? getToColor(uv2) : getFromColor(uv2);\r\n    }\r\n    else { col3 = FadeInSecond==1.0 ? vec4(0.0, 0.0, 0.0, 1.0) : ColorTo; }\r\n    return((1.0 - t) * col3 + t * ColorTo); // could have used mix\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "RotateScaleVanish",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n#define PI 3.1415926\r\n\r\nvec2 rotate2D(in vec2 uv, in float angle){\r\n\r\n    return uv * mat2(cos(angle), -sin(angle), sin(angle), cos(angle));\r\n}\r\nvec4 transition (vec2 uv) {\r\n\r\n    vec2 p = fract(rotate2D(uv - 0.5, dm_progress * PI * 2.0) + 0.5);\r\n\r\n    return mix(\r\n    getFromColor(p),\r\n    getToColor(p),\r\n    dm_progress\r\n    );\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "rotateTransition",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "center_x",
+        "value": 0.5
+      },
+      {
+        "key": "center_y",
+        "value": 0.5
+      },
+      {
+        "key": "rotations",
+        "value": 1.0
+      },
+      {
+        "key": "scale",
+        "value": 8.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n#define PI 3.14159265359\r\n\r\nuniform float center_x; // = 0.5\r\nuniform float center_y; // = 0.5\r\nuniform float rotations; // = 1.0\r\nuniform float scale; // = 8\r\n\r\nvec4 transition (vec2 uv) {\r\n    vec2 center =vec2(center_x,center_y);\r\n    vec2 difference = uv - center;\r\n    vec2 dir = normalize(difference);\r\n    float dist = length(difference);\r\n\r\n    float angle = 2.0 * PI * rotations * dm_progress;\r\n\r\n    float c = cos(angle);\r\n    float s = sin(angle);\r\n\r\n    float currentScale = mix(scale, 1.0, 2.0 * abs(dm_progress - 0.5));\r\n\r\n    vec2 rotatedDir = vec2(dir.x  * c - dir.y * s, dir.x * s + dir.y * c);\r\n    vec2 rotatedUv = center + rotatedDir * dist / currentScale;\r\n\r\n    if (rotatedUv.x < 0.0 || rotatedUv.x > 1.0 ||\r\n    rotatedUv.y < 0.0 || rotatedUv.y > 1.0)\r\n    return getFromColor(uv);\r\n\r\n    return mix(getFromColor(rotatedUv), getToColor(rotatedUv), dm_progress);\r\n}\r\n\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "rotate_scale_fade",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec4 scale(in vec2 uv){\r\n    uv = 0.5 + (uv - 0.5) * dm_progress;\r\n    return getToColor(uv);\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    return mix(\r\n    getFromColor(uv),\r\n    scale(uv),\r\n    dm_progress\r\n    );\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "scale-in",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "zoom_quickness",
+        "value": 0.8
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\n\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float zoom_quickness; // = 0.8\r\n\r\nvec2 zoom(vec2 uv, float amount) {\r\n    return 0.5 + ((uv - 0.5) * (1.0-amount));\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    float nQuick = clamp(zoom_quickness,0.2,1.0);\r\n    return mix(\r\n    getFromColor(zoom(uv, smoothstep(0.0, nQuick, dm_progress))),\r\n    getToColor(uv),\r\n    smoothstep(nQuick-0.2, 1.0, dm_progress)\r\n    );\r\n}\r\n\r\nvoid main(void) {\r\n    gl_FragColor =transition(vTexCoord);\r\n\r\n}",
+    "name_file": "SimpleZoom",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "squares_x",
+        "value": 20.0
+      },
+      {
+        "key": "squares_y",
+        "value": 20.0
+      },
+      {
+        "key": "direction_x",
+        "value": 1.0
+      },
+      {
+        "key": "direction_y",
+        "value": -0.5
+      },
+      {
+        "key": "smoothness",
+        "value": 1.6
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float squares_x;// =20.0\r\nuniform float squares_y;// =20.0\r\nuniform float direction_x;// = 1.0\r\nuniform float direction_y;// = -0.5\r\nuniform float smoothness; // = 1.6\r\n\r\nconst vec2 center = vec2(0.5, 0.5);\r\n\r\nvec4 transition (vec2 p) {\r\n    vec2 direction=vec2(direction_x,direction_y);\r\n    vec2 squares=vec2(squares_x,squares_y);\r\n    vec2 v = normalize(direction);\r\n    v /= abs(v.x)+abs(v.y);\r\n    float d = v.x * center.x + v.y * center.y;\r\n    float offset = smoothness;\r\n    float pr = smoothstep(-offset, 0.0, v.x * p.x + v.y * p.y - (d-0.5+dm_progress*(1.+offset)));\r\n    vec2 squarep = fract(p*squares);\r\n    vec2 squaremin = vec2(pr/2.0);\r\n    vec2 squaremax = vec2(1.0 - pr/2.0);\r\n    float a = (1.0 - step(dm_progress, 0.0)) * step(squaremin.x, squarep.x) * step(squaremin.y, squarep.y) * step(squarep.x, squaremax.x) * step(squarep.y, squaremax.y);\r\n    return mix(getFromColor(p), getToColor(p), a);\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "squareswire",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "colorSeparation",
+        "value": 0.04
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float colorSeparation; // = 0.04\r\n\r\nvec4 transition (vec2 uv) {\r\n    float y = 0.5 + (uv.y-0.5) / (1.0-dm_progress);\r\n    if (y < 0.0 || y > 1.0) {\r\n        return getToColor(uv);\r\n    }\r\n    else {\r\n        vec2 fp = vec2(uv.x, y);\r\n        vec2 off = dm_progress * vec2(0.0, colorSeparation);\r\n        vec4 c = getFromColor(fp);\r\n        vec4 cn = getFromColor(fp - off);\r\n        vec4 cp = getFromColor(fp + off);\r\n        return vec4(cn.r, c.g, cp.b, c.a);\r\n    }\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "squeeze",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "zoom",
+        "value": 0.88
+      },
+      {
+        "key": "corner_radius",
+        "value": 0.22
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){return texture2D(dm_from,uv);}\r\nvec4 getToColor(vec2 uv){return texture2D(dm_to,uv);}\r\nuniform float dm_ratio;\r\n\r\n\r\nuniform float zoom; // = 0.88\r\n// Corner radius as a fraction of the image height\r\nuniform float corner_radius;  // = 0.22\r\n\r\n\r\nconst vec4 black = vec4(0.0, 0.0, 0.0, 1.0);\r\nconst vec2 c00 = vec2(0.0, 0.0); // the four corner points\r\nconst vec2 c01 = vec2(0.0, 1.0);\r\nconst vec2 c11 = vec2(1.0, 1.0);\r\nconst vec2 c10 = vec2(1.0, 0.0);\r\n\r\n// Check if a point is within a given corner\r\nbool in_corner(vec2 p, vec2 corner, vec2 radius) {\r\n    // determine the direction we want to be filled\r\n    vec2 axis = (c11 - corner) - corner;\r\n\r\n    // warp the point so we are always testing the bottom left point with the\r\n    // circle centered on the origin\r\n    p = p - (corner + axis * radius);\r\n    p *= axis / radius;\r\n    return (p.x > 0.0 && p.y > -1.0) || (p.y > 0.0 && p.x > -1.0) || dot(p, p) < 1.0;\r\n}\r\n\r\n// Check all four corners\r\n// return a float for v2 for anti-aliasing?\r\nbool test_rounded_mask(vec2 p, vec2 corner_size) {\r\n    return\r\n    in_corner(p, c00, corner_size) &&\r\n    in_corner(p, c01, corner_size) &&\r\n    in_corner(p, c10, corner_size) &&\r\n    in_corner(p, c11, corner_size);\r\n}\r\n\r\n// Screen blend mode - https://en.wikipedia.org/wiki/Blend_modes\r\n// This more closely approximates what you see than linear blending\r\nvec4 screen(vec4 a, vec4 b) {\r\n    return 1.0 - (1.0 - a) * (1.0 -b);\r\n}\r\n\r\n// Given RGBA, find a value that when screened with itself\r\n// will yield the original value.\r\nvec4 unscreen(vec4 c) {\r\n    return 1.0 - sqrt(1.0 - c);\r\n}\r\n\r\n// Grab a pixel, only if it isn't masked out by the rounded corners\r\nvec4 sample_with_corners_from(vec2 p, vec2 corner_size) {\r\n    p = (p - 0.5) / zoom + 0.5;\r\n    if (!test_rounded_mask(p, corner_size)) {\r\n        return black;\r\n    }\r\n    return unscreen(getFromColor(p));\r\n}\r\n\r\nvec4 sample_with_corners_to(vec2 p, vec2 corner_size) {\r\n    p = (p - 0.5) / zoom + 0.5;\r\n    if (!test_rounded_mask(p, corner_size)) {\r\n        return black;\r\n    }\r\n    return unscreen(getToColor(p));\r\n}\r\n\r\n// special sampling used when zooming - extra zoom parameter and don't unscreen\r\nvec4 simple_sample_with_corners_from(vec2 p, vec2 corner_size, float zoom_amt) {\r\n    p = (p - 0.5) / (1.0 - zoom_amt + zoom * zoom_amt) + 0.5;\r\n    if (!test_rounded_mask(p, corner_size)) {\r\n        return black;\r\n    }\r\n    return getFromColor(p);\r\n}\r\n\r\nvec4 simple_sample_with_corners_to(vec2 p, vec2 corner_size, float zoom_amt) {\r\n    p = (p - 0.5) / (1.0 - zoom_amt + zoom * zoom_amt) + 0.5;\r\n    if (!test_rounded_mask(p, corner_size)) {\r\n        return black;\r\n    }\r\n    return getToColor(p);\r\n}\r\n\r\n// Basic 2D affine transform matrix helpers\r\n// These really shouldn't be used in a fragment shader - I should work out the\r\n// the math for a translate & rotate function as a pair of dot products instead\r\n\r\nmat3 rotate2d(float angle, float dm_ratio) {\r\n    float s = sin(angle);\r\n    float c = cos(angle);\r\n    return mat3(\r\n    c, s ,0.0,\r\n    -s, c, 0.0,\r\n    0.0, 0.0, 1.0);\r\n}\r\n\r\nmat3 translate2d(float x, float y) {\r\n    return mat3(\r\n    1.0, 0.0, 0,\r\n    0.0, 1.0, 0,\r\n    -x, -y, 1.0);\r\n}\r\n\r\nmat3 scale2d(float x, float y) {\r\n    return mat3(\r\n    x, 0.0, 0,\r\n    0.0, y, 0,\r\n    0, 0, 1.0);\r\n}\r\n\r\n// Split an image and rotate one up and one down along off screen pivot points\r\nvec4 get_cross_rotated(vec3 p3, float angle, vec2 corner_size, float dm_ratio) {\r\n    angle = angle * angle; // easing\r\n    angle /= 2.4; // works out to be a good number of radians\r\n\r\n    mat3 center_and_scale = translate2d(-0.5, -0.5) * scale2d(1.0, dm_ratio);\r\n    mat3 unscale_and_uncenter = scale2d(1.0, 1.0/dm_ratio) * translate2d(0.5,0.5);\r\n    mat3 slide_left = translate2d(-2.0,0.0);\r\n    mat3 slide_right = translate2d(2.0,0.0);\r\n    mat3 rotate = rotate2d(angle, dm_ratio);\r\n\r\n    mat3 op_a = center_and_scale * slide_right * rotate * slide_left * unscale_and_uncenter;\r\n    mat3 op_b = center_and_scale * slide_left * rotate * slide_right * unscale_and_uncenter;\r\n\r\n    vec4 a = sample_with_corners_from((op_a * p3).xy, corner_size);\r\n    vec4 b = sample_with_corners_from((op_b * p3).xy, corner_size);\r\n\r\n    return screen(a, b);\r\n}\r\n\r\n// Image stays put, but this time move two masks\r\nvec4 get_cross_masked(vec3 p3, float angle, vec2 corner_size, float dm_ratio) {\r\n    angle = 1.0 - angle;\r\n    angle = angle * angle; // easing\r\n    angle /= 2.4;\r\n\r\n    vec4 img;\r\n\r\n    mat3 center_and_scale = translate2d(-0.5, -0.5) * scale2d(1.0, dm_ratio);\r\n    mat3 unscale_and_uncenter = scale2d(1.0 / zoom, 1.0 / (zoom * dm_ratio)) * translate2d(0.5,0.5);\r\n    mat3 slide_left = translate2d(-2.0,0.0);\r\n    mat3 slide_right = translate2d(2.0,0.0);\r\n    mat3 rotate = rotate2d(angle, dm_ratio);\r\n\r\n    mat3 op_a = center_and_scale * slide_right * rotate * slide_left * unscale_and_uncenter;\r\n    mat3 op_b = center_and_scale * slide_left * rotate * slide_right * unscale_and_uncenter;\r\n\r\n    bool mask_a = test_rounded_mask((op_a * p3).xy, corner_size);\r\n    bool mask_b = test_rounded_mask((op_b * p3).xy, corner_size);\r\n\r\n    if (mask_a || mask_b) {\r\n        img = sample_with_corners_to(p3.xy, corner_size);\r\n        return screen(mask_a ? img : black, mask_b ? img : black);\r\n    } else {\r\n        return black;\r\n    }\r\n}\r\n\r\nvec4 transition(vec2 uv) {\r\n    float a;\r\n    vec2 p=uv.xy/vec2(1.0).xy;\r\n    vec3 p3 = vec3(p.xy, 1.0); // for 2D matrix transforms\r\n\r\n    // corner is warped to represent to size after mapping to 1.0, 1.0\r\n    vec2 corner_size = vec2(corner_radius / dm_ratio, corner_radius);\r\n\r\n    if (dm_progress <= 0.0) {\r\n        // 0.0: start with the base frame always\r\n        return getFromColor(p);\r\n    } else if (dm_progress < 0.1) {\r\n        // 0.0-0.1: zoom out and add rounded corners\r\n        a = dm_progress / 0.1;\r\n        return  simple_sample_with_corners_from(p, corner_size * a, a);\r\n    } else if (dm_progress < 0.48) {\r\n        // 0.1-0.48: Split original image apart\r\n        a = (dm_progress - 0.1)/0.38;\r\n        return get_cross_rotated(p3, a, corner_size, dm_ratio);\r\n    } else if (dm_progress < 0.9) {\r\n        // 0.48-0.52: black\r\n        // 0.52 - 0.9: unmask new image\r\n        return get_cross_masked(p3, (dm_progress - 0.52)/0.38, corner_size, dm_ratio);\r\n    } else if (dm_progress < 1.0) {\r\n        // zoom out and add rounded corners\r\n        a = (1.0 - dm_progress) / 0.1;\r\n        return simple_sample_with_corners_to(p, corner_size * a, a);\r\n    } else {\r\n        // 1.0 end with base frame\r\n        return getToColor(p);\r\n    }\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "StereoViewer",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition(vec2 UV)\r\n{\r\n    float Radius = 1.0;\r\n\r\n    float T = dm_progress;\r\n\r\n    UV -= vec2( 0.5, 0.5 );\r\n\r\n    float Dist = length(UV);\r\n\r\n    if ( Dist < Radius )\r\n    {\r\n        float Percent = (Radius - Dist) / Radius;\r\n        float A = ( T <= 0.5 ) ? mix( 0.0, 1.0, T/0.5 ) : mix( 1.0, 0.0, (T-0.5)/0.5 );\r\n        float Theta = Percent * Percent * A * 8.0 * 3.14159;\r\n        float S = sin( Theta );\r\n        float C = cos( Theta );\r\n        UV = vec2( dot(UV, vec2(C, -S)), dot(UV, vec2(S, C)) );\r\n    }\r\n    UV += vec2( 0.5, 0.5 );\r\n\r\n    vec4 C0 = getFromColor(UV);\r\n    vec4 C1 = getToColor(UV);\r\n\r\n    return mix( C0, C1, T );\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "Swirl",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\nuniform float dm_ratio;\r\n\r\n\r\nfloat rand (vec2 co) {\r\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\n\r\n// motion blur for texture from\r\nvec4 motionBlurFrom(vec2 _st, vec2 speed) {\r\n    vec2 texCoord = _st.xy / vec2(1.0).xy;\r\n    vec3 color = vec3(0.0);\r\n    float total = 0.0;\r\n    float offset = rand(_st);\r\n    for (float t = 0.0; t <= 20.0; t++) {\r\n        float percent = (t + offset) / 20.0;\r\n        float weight = 4.0 * (percent - percent * percent);\r\n        vec2 newuv = texCoord + speed * percent;\r\n        newuv = fract(newuv);\r\n        color += getFromColor(newuv).rgb * weight;\r\n        total += weight;\r\n    }\r\n    return vec4(color / total, 1.0);\r\n}\r\n\r\n// motion blur for texture to\r\nvec4 motionBlurTo(vec2 _st, vec2 speed) {\r\n    vec2 texCoord = _st.xy / vec2(1.0).xy;\r\n    vec3 color = vec3(0.0);\r\n    float total = 0.0;\r\n    float offset = rand(_st);\r\n    for (float t = 0.0; t <= 20.0; t++) {\r\n        float percent = (t + offset) / 20.0;\r\n        float weight = 4.0 * (percent - percent * percent);\r\n        vec2 newuv = texCoord + speed * percent;\r\n        newuv = fract(newuv);\r\n        color += getToColor(newuv).rgb * weight;\r\n        total += weight;\r\n    }\r\n    return vec4(color / total, 1.0);\r\n}\r\n\r\n\r\n// bezier in gpu\r\nfloat A(float aA1, float aA2) {\r\n    return 1.0 - 3.0 * aA2 + 3.0 * aA1;\r\n}\r\nfloat B(float aA1, float aA2) {\r\n    return 3.0 * aA2 - 6.0 * aA1;\r\n}\r\nfloat C(float aA1) {\r\n    return 3.0 * aA1;\r\n}\r\nfloat GetSlope(float aT, float aA1, float aA2) {\r\n    return 3.0 * A(aA1, aA2)*aT*aT + 2.0 * B(aA1, aA2) * aT + C(aA1);\r\n}\r\nfloat CalcBezier(float aT, float aA1, float aA2) {\r\n    return ((A(aA1, aA2)*aT + B(aA1, aA2))*aT + C(aA1))*aT;\r\n}\r\nfloat GetTForX(float aX, float mX1, float mX2) {\r\n    // iteration to solve\r\n    float aGuessT = aX;\r\n    for (int i = 0; i < 4; ++i) {\r\n        float currentSlope = GetSlope(aGuessT, mX1, mX2);\r\n        if (currentSlope == 0.0) return aGuessT;\r\n        float currentX = CalcBezier(aGuessT, mX1, mX2) - aX;\r\n        aGuessT -= currentX / currentSlope;\r\n    }\r\n    return aGuessT;\r\n}\r\nfloat KeySpline(float aX, float mX1, float mY1, float mX2, float mY2) {\r\n    if (mX1 == mY1 && mX2 == mY2) return aX; // linear\r\n    return CalcBezier(GetTForX(aX, mX1, mX2), mY1, mY2); // x to t, t to y\r\n}\r\n\r\n// norm distribution\r\nfloat normpdf(float x) {\r\n    return exp(-20.*pow(x-.5,2.));\r\n}\r\n\r\nvec2 rotateUv(vec2 uv, float angle, vec2 anchor, float zDirection) {\r\n    uv = uv - anchor; // anchor to origin\r\n    float s = sin(angle);\r\n    float c = cos(angle);\r\n    mat2 m = mat2(c, -s, s, c);\r\n    uv = m * uv;\r\n    uv += anchor; // anchor back\r\n    return uv;\r\n}\r\n\r\n\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n\r\n    vec2 myst = uv;\r\n    float animationTime = dm_progress; //getAnimationTime();\r\n    float easingTime = KeySpline(animationTime, .68,.01,.17,.98);\r\n    float blur = normpdf(easingTime);\r\n    float r = 0.;\r\n    float rotation = 180./180.*3.14159;\r\n    if (easingTime <= .5) {\r\n        r = rotation * easingTime;\r\n    } else {\r\n        r = -rotation + rotation * easingTime;\r\n    }\r\n\r\n    // rotation for current frame\r\n    vec2 mystCurrent = myst;\r\n    mystCurrent.y *= 1./dm_ratio;\r\n    mystCurrent = rotateUv(mystCurrent, r, vec2(1., 0.), -1.);\r\n    mystCurrent.y *= dm_ratio;\r\n\r\n    // frame timeInterval by fps=30\r\n    float timeInterval = 0.0167*2.0;\r\n    if (easingTime <= .5) {\r\n        r = rotation * (easingTime+timeInterval);\r\n    } else {\r\n        r = -rotation + rotation * (easingTime+timeInterval);\r\n    }\r\n\r\n    // rotation for next frame\r\n    vec2 mystNext = myst;\r\n    mystNext.y *= 1./dm_ratio;\r\n    mystNext = rotateUv(mystNext, r, vec2(1., 0.), -1.);\r\n    mystNext.y *= dm_ratio;\r\n\r\n    // get speed at tagent direction\r\n    vec2 speed  = (mystNext - mystCurrent) / timeInterval * blur * 0.5;\r\n    if (easingTime <= .5) {\r\n        return motionBlurFrom(mystCurrent, speed);\r\n    } else {\r\n        return motionBlurTo(mystCurrent, speed);\r\n    }\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "tangentMotionBlur",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "smoothness",
+        "value": 0.03
+      },
+      {
+        "key": "center_x",
+        "value": 0.5
+      },
+      {
+        "key": "center_y",
+        "value": 0.5
+      },
+      {
+        "key": "color_r",
+        "value": 0.0
+      },
+      {
+        "key": "color_g",
+        "value": 0.0
+      },
+      {
+        "key": "color_b",
+        "value": 0.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float smoothness; // = 0.03\r\n\r\nuniform float center_x; // = 0.5\r\nuniform float center_y; // = 0.5\r\nuniform float color_r; // =0.0\r\nuniform float color_g; // =0.0\r\nuniform float color_b; // =0.0\r\n\r\n\r\nconst float M_PI = 3.14159265358979323846;\r\n\r\nfloat quadraticInOut(float t) {\r\n    float p = 2.0 * t * t;\r\n    return t < 0.5 ? p : -p + (4.0 * t) - 1.0;\r\n}\r\n\r\nfloat getGradient(float r, float dist) {\r\n    float d = r - dist;\r\n    return mix(\r\n    smoothstep(-smoothness, 0.0, r - dist * (1.0 + smoothness)),\r\n    -1.0 - step(0.005, d),\r\n    step(-0.005, d) * step(d, 0.01)\r\n    );\r\n}\r\n\r\nfloat getWave(vec2 p){\r\n    vec2 center=vec2(center_x,center_y); // = vec2(0.5)\r\n    vec2 _p = p - center; // offset from center\r\n    float rads = atan(_p.y, _p.x);\r\n    float degs = degrees(rads) + 180.0;\r\n    vec2 range = vec2(0.0, M_PI * 30.0);\r\n    vec2 domain = vec2(0.0, 360.0);\r\n    float ratio = (M_PI * 30.0) / 360.0;\r\n    degs = degs * ratio;\r\n    float x = dm_progress;\r\n    float magnitude = mix(0.02, 0.09, smoothstep(0.0, 1.0, x));\r\n    float offset = mix(40.0, 30.0, smoothstep(0.0, 1.0, x));\r\n    float ease_degs = quadraticInOut(sin(degs));\r\n    float deg_wave_pos = (ease_degs * magnitude) * sin(x * offset);\r\n    return x + deg_wave_pos;\r\n}\r\n\r\nvec4 transition(vec2 p) {\r\n    vec2 center=vec2(center_x,center_y); // = vec2(0.5)\r\n    float dist = distance(center, p);\r\n    float m = getGradient(getWave(p), dist);\r\n    vec4 cfrom = getFromColor(p);\r\n    vec4 cto = getToColor(p);\r\n    vec3 color=vec3(color_r,color_g,color_b);\r\n    return mix(mix(cfrom, cto, m), mix(cfrom, vec4(color, 1.0), 0.75), step(m, -2.0));\r\n}\r\n\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "undulatingBurnOut",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n    float s = 2.0 - abs((uv.x - 0.5) / (dm_progress - 1.0)) - 2.0 * dm_progress;\r\n\r\n    return mix(\r\n    getFromColor(uv),\r\n    getToColor(uv),\r\n    smoothstep(0.5, 0.0, s)\r\n    );\r\n}\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "VerticalClose",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\nvarying vec2 vTexCoord3;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition (vec2 uv) {\r\n\r\n    float regress = 1.0 - dm_progress;\r\n    float s = 2.0 - abs((uv.x - 0.5) / (regress - 1.0)) - 2.0 * regress;\r\n\r\n    return mix(\r\n    getFromColor(uv),\r\n    getToColor(uv),\r\n    smoothstep(0.0, 0.5, s)\r\n    );\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "VerticalOpen",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "amplitude",
+        "value": 30.0
+      },
+      {
+        "key": "speed",
+        "value": 30.0
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nuniform float amplitude; // = 30\r\nuniform float speed; // = 30\r\n\r\nvec4 transition(vec2 p) {\r\n    vec2 dir = p - vec2(.5);\r\n    float dist = length(dir);\r\n\r\n    if (dist > dm_progress) {\r\n        return mix(getFromColor( p), getToColor( p), dm_progress);\r\n    } else {\r\n        vec2 offset = dir * sin(dist * amplitude - dm_progress * speed);\r\n        return mix(getFromColor( p + offset), getToColor( p), dm_progress);\r\n    }\r\n}\r\n\r\nvoid main(void) {\r\n    gl_FragColor =transition(vTexCoord);\r\n\r\n}",
+    "name_file": "WaterDrop",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "size",
+        "value": 0.2
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float size; // = 0.2\r\n\r\nfloat rand (vec2 co) {\r\n    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    float r = rand(vec2(0, uv.y));\r\n    float m = smoothstep(0.0, -size, uv.x*(1.0-size) + size*r - (dm_progress * (1.0 + size)));\r\n    return mix(\r\n    getFromColor(uv),\r\n    getToColor(uv),\r\n    m\r\n    );\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "wind",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\nvec4 transition (vec2 uv) {\r\n    float t = dm_progress;\r\n\r\n    if (mod(floor(uv.y*100.*dm_progress),2.)==0.)\r\n    t*=2.-.5;\r\n\r\n    return mix(\r\n    getFromColor(uv),\r\n    getToColor(uv),\r\n    mix(t, dm_progress, smoothstep(0.8, 1.0, dm_progress))\r\n    );\r\n}\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "windowblinds",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 p=uv.xy/vec2(1.0).xy;\r\n    vec4 a=getFromColor(p);\r\n    vec4 b=getToColor(p);\r\n    return mix(a, b, step(1.0-p.y,dm_progress));\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "wipeDown",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 p=uv.xy/vec2(1.0).xy;\r\n    vec4 a=getFromColor(p);\r\n    vec4 b=getToColor(p);\r\n    return mix(a, b, step(1.0-p.x,dm_progress));\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "wipeLeft",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 p=uv.xy/vec2(1.0).xy;\r\n    vec4 a=getFromColor(p);\r\n    vec4 b=getToColor(p);\r\n    return mix(a, b, step(0.0+p.x,dm_progress));\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "wipeRight",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 p=uv.xy/vec2(1.0).xy;\r\n    vec4 a=getFromColor(p);\r\n    vec4 b=getToColor(p);\r\n    return mix(a, b, step(0.0+p.y,dm_progress));\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "wipeUp",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\nuniform float dm_ratio;\r\n\r\n\r\nvec2 zoom(vec2 uv, float amount) {\r\n    return 0.5 + ((uv - 0.5) * amount);\r\n}\r\n\r\n\r\nvec4 transition(vec2 uv) {\r\n    vec2 ratio2 = vec2(1.0, 1.0 / dm_ratio);\r\n\r\n    // TODO: some timing are hardcoded but should be one or many parameters\r\n    // TODO: should also be able to configure how much circles\r\n    // TODO: if() branching should be avoided when possible, prefer use of step() & other functions\r\n    vec2 r = 2.0 * ((vec2(uv.xy) - 0.5) * ratio2);\r\n    float pro = dm_progress / 0.8;\r\n    float z = pro * 0.2;\r\n    float t = 0.0;\r\n    if (pro > 1.0) {\r\n        z = 0.2 + (pro - 1.0) * 5.;\r\n        t = clamp((dm_progress - 0.8) / 0.07, 0.0, 1.0);\r\n    }\r\n    if (length(r) < 0.5+z) {\r\n        // uv = zoom(uv, 0.9 - 0.1 * pro);\r\n    }\r\n    else if (length(r) < 0.8+z*1.5) {\r\n        uv = zoom(uv, 1.0 - 0.15 * pro);\r\n        t = t * 0.5;\r\n    }\r\n    else if (length(r) < 1.2+z*2.5) {\r\n        uv = zoom(uv, 1.0 - 0.2 * pro);\r\n        t = t * 0.2;\r\n    }\r\n    else {\r\n        uv = zoom(uv, 1.0 - 0.25 * pro);\r\n    }\r\n    return mix(getFromColor(uv), getToColor(uv), t);\r\n}\r\n\r\n\r\n\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "ZoomInCircles",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "zoom_quickness",
+        "value": 0.8
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float zoom_quickness; // = 0.8\r\n\r\nvec2 zoom(vec2 uv, float amount) {\r\n    if(amount<0.5)\r\n    return 0.5 + ((uv - 0.5) * (1.0-amount));\r\n    else\r\n    return 0.5 + ((uv - 0.5) * (amount));\r\n\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    float nQuick = clamp(zoom_quickness,0.0,0.5);\r\n    if(dm_progress<0.5){\r\n        vec4 c= mix(\r\n        getFromColor(zoom(uv, smoothstep(0.0, nQuick, dm_progress))),\r\n        getToColor(uv),\r\n        step(0.5, dm_progress)\r\n        );\r\n\r\n        return c;\r\n    }\r\n    else{\r\n        vec2 p=uv.xy/vec2(1.0).xy;\r\n        vec4 d=getFromColor(p);\r\n        vec4 e=getToColor(p);\r\n        vec4 f= mix(d, e, step(1.0-p.x,(dm_progress-0.5)*2.0));\r\n\r\n        return f;\r\n    }\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "ZoomLeftWipe",
+    "name_luma_img": []
+  },
+  {
+    "vl_key": [
+      {
+        "key": "zoom_quickness",
+        "value": 0.8
+      }
+    ],
+    "str": "#ifdef GL_ES\r\n#define LOWP lowp\r\nprecision mediump float;\r\n#else\r\n#define LOWP\r\n#endif\r\n//\"in\" attributes from our vertex shader\r\nvarying LOWP vec4 vColor;\r\nvarying vec2 vTexCoord;\r\n//our different texture units\r\n\r\nprecision highp float;\r\nuniform sampler2D dm_from;\r\nuniform sampler2D dm_to;\r\nuniform float dm_progress;\r\n\r\nvec4 getFromColor(vec2 uv){ return texture2D(dm_from, uv); }\r\nvec4 getToColor(vec2 uv){ return texture2D(dm_to, uv); }\r\n\r\n\r\nuniform float zoom_quickness; // = 0.8\r\n\r\nvec2 zoom(vec2 uv, float amount) {\r\n    if(amount<0.5)\r\n    return 0.5 + ((uv - 0.5) * (1.0-amount));\r\n    else\r\n    return 0.5 + ((uv - 0.5) * (amount));\r\n\r\n}\r\n\r\nvec4 transition (vec2 uv) {\r\n    float nQuick = clamp(zoom_quickness,0.0,0.5);\r\n\r\n    if(dm_progress<0.5){\r\n        vec4 c= mix(\r\n        getFromColor(zoom(uv, smoothstep(0.0, nQuick, dm_progress))),\r\n        getToColor(uv),\r\n        step(0.5, dm_progress)\r\n        );\r\n\r\n        return c;\r\n    }\r\n    else{\r\n        vec2 p=uv.xy/vec2(1.0).xy;\r\n        vec4 d=getFromColor(p);\r\n        vec4 e=getToColor(p);\r\n        vec4 f= mix(d, e, step(0.0+p.x,(dm_progress-0.5)*2.0));\r\n\r\n        return f;\r\n    }\r\n}\r\n\r\nvoid main(void){\r\n    gl_FragColor=transition(vTexCoord);\r\n\r\n}",
+    "name_file": "ZoomRigthWipe",
+    "name_luma_img": []
+  }
+]
