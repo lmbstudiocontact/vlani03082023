@@ -1,6 +1,24 @@
 {
-  "total": 177,
+  "total": 178,
   "data": [
+    {
+      "id_img": "anime_03092023084553_95",
+      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiiemw3O6R+VEm5z2dA+0hTG7XH5yAI6+MOx17xnaUM5MVpVy4706IhQgSYlgwrgVRHU=",
+      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiiemw3O6R+VEm5z2dA+0hTG7OHAuGqvJ3v62uCko2rqwgpVy4706IhQgSYlgwrgVRHU=",
+      "albl": [
+        "Girls",
+        "Virtual Youtuber"
+      ],
+      "norl": [],
+      "spel": [],
+      "i_top": 0,
+      "i_newest": 107,
+      "i_sgg": 0,
+      "h_img": 1232,
+      "w_img": 928,
+      "date_img_modified": 1693703552210,
+      "file_size": "1.21 Mb"
+    },
     {
       "id_img": "anime_28082023083159_191",
       "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicLP5j+b68n16ssNncVrs02DxBAEhgjfPF8qgbO/FTOYZVy4706IhQgSYlgwrgVRHU=",
@@ -12,7 +30,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 180,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1024,
@@ -30,7 +48,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 181,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1024,
@@ -48,7 +66,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 182,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1024,
@@ -66,7 +84,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 183,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1024,
@@ -84,7 +102,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 1895,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 816,
       "w_img": 1456,
@@ -102,7 +120,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 1896,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1232,
       "w_img": 928,
@@ -120,7 +138,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 1897,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 816,
       "w_img": 1456,
@@ -138,7 +156,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 1910,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1232,
       "w_img": 928,
@@ -2034,32 +2052,6 @@
       "w_img": 1362,
       "date_img_modified": 1645547799799,
       "file_size": "295.23 Kb"
-    },
-    {
-      "id_img": "VirtualYoutuber_945285_crop2608_-1025631124",
-      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidcwH0z9CkY/X96oTfwdwhiM/dHnNKiqY6Mh8wY/SSaKJVy4706IhQgSYlgwrgVRHU=",
-      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidcwH0z9CkY/X96oTfwdwhiCpjpyhftOsgIbugtwDNkrJVy4706IhQgSYlgwrgVRHU=",
-      "albl": [
-        "Virtual Youtuber",
-        "Girls"
-      ],
-      "norl": [
-        "Tsukino Mito"
-      ],
-      "spel": [
-        "Girls Hair Black",
-        "Girls Student",
-        "Girls Long Hair",
-        "Girls Eyes Black",
-        "Girls Tie Bows"
-      ],
-      "i_top": 0,
-      "i_newest": 0,
-      "i_sgg": 0,
-      "h_img": 2508,
-      "w_img": 1765,
-      "date_img_modified": 1645547798971,
-      "file_size": "247.25 Kb"
     }
   ]
 }

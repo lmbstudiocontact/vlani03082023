@@ -1,6 +1,100 @@
 {
-  "total": 16,
+  "total": 17,
   "data": [
+    {
+      "n_week": "03/September/2023",
+      "total": 1784,
+      "ls_img_recent": [
+        {
+          "id_img": "anime_03092023084553_219",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicoRZ1E4ioCpc7MXA+P0ckv+bv3YZZOaFRU6qv8A99oKJVy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicoRZ1E4ioCpc7MXA+P0ckvnqqXLVDc50gfu52sAY0kB5Vy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 0,
+          "i_sgg": 0,
+          "h_img": 1232,
+          "w_img": 928,
+          "date_img_modified": 1693705349025,
+          "file_size": "1.71 Mb"
+        },
+        {
+          "id_img": "anime_03092023084553_220",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifduBMrOuu31mmfL0yC0ff+63+069ivUs+ZrDq9vvK835Vy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifduBMrOuu31mmfL0yC0ff+jQ+OuETEHnFSUixu8ksroZVy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 1,
+          "i_sgg": 0,
+          "h_img": 816,
+          "w_img": 1456,
+          "date_img_modified": 1693705347091,
+          "file_size": "1.67 Mb"
+        },
+        {
+          "id_img": "anime_03092023084553_221",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifL/9nOjE8ZNDGeszIelRDYwfVpJz5JnizQOhQW985m6JVy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifL/9nOjE8ZNDGeszIelRDYa4mRXAVFGwDxzdqEkz/GjJVy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 2,
+          "i_sgg": 0,
+          "h_img": 1232,
+          "w_img": 928,
+          "date_img_modified": 1693705345016,
+          "file_size": "1.38 Mb"
+        },
+        {
+          "id_img": "anime_03092023084553_222",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicNI92f5Y3Sx0zGSmd62jc+xmBjXerMnUrKKAY1eUp7kJVy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicNI92f5Y3Sx0zGSmd62jc+0VmOO9AA/6ESN6j1TeNnepVy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 3,
+          "i_sgg": 0,
+          "h_img": 816,
+          "w_img": 1456,
+          "date_img_modified": 1693705343190,
+          "file_size": "1.79 Mb"
+        },
+        {
+          "id_img": "anime_03092023084553_223",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiic2bgYA9SHd0qK4lVj2kx19cc7tKTM/Wa5lO1bZ+6m8b5Vy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiic2bgYA9SHd0qK4lVj2kx19NpCpTce5uisG/6L++aLXf5Vy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 4,
+          "i_sgg": 0,
+          "h_img": 1232,
+          "w_img": 928,
+          "date_img_modified": 1693705341524,
+          "file_size": "1.65 Mb"
+        }
+      ],
+      "i_top": 0,
+      "i_newest": 0,
+      "i_sgg": 0
+    },
     {
       "n_week": "28/August/2023",
       "total": 2190,
@@ -32,7 +126,7 @@
           "norl": [],
           "spel": [],
           "i_top": 0,
-          "i_newest": 1,
+          "i_newest": 0,
           "i_sgg": 0,
           "h_img": 2995,
           "w_img": 1996,
@@ -49,7 +143,7 @@
           "norl": [],
           "spel": [],
           "i_top": 0,
-          "i_newest": 2,
+          "i_newest": 0,
           "i_sgg": 0,
           "h_img": 2995,
           "w_img": 1996,
@@ -66,7 +160,7 @@
           "norl": [],
           "spel": [],
           "i_top": 0,
-          "i_newest": 3,
+          "i_newest": 0,
           "i_sgg": 0,
           "h_img": 2995,
           "w_img": 1996,
@@ -83,7 +177,7 @@
           "norl": [],
           "spel": [],
           "i_top": 0,
-          "i_newest": 4,
+          "i_newest": 0,
           "i_sgg": 0,
           "h_img": 4096,
           "w_img": 2304,
