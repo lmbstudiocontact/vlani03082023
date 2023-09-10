@@ -1,6 +1,102 @@
 {
-  "total": 17,
+  "total": 18,
   "data": [
+    {
+      "n_week": "10/September/2023",
+      "total": 1427,
+      "ls_img_recent": [
+        {
+          "id_img": "anime_10092023094856_129",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiieA8l9RvQs+Z3cUWZx6t8AzFDBzJWb7IX0Cx/ZtXN4YSJVy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiieA8l9RvQs+Z3cUWZx6t8AzAtZA0RhSdW4GAKlbsLsxBZVy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls",
+            "The Dangers in My Heart Boku no Kokoro no Yabai Yatsu"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 0,
+          "i_sgg": 0,
+          "h_img": 1536,
+          "w_img": 1024,
+          "date_img_modified": 1694313806576,
+          "file_size": "1.45 Mb"
+        },
+        {
+          "id_img": "anime_10092023094856_133",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicpyCEEiCbz+8gX74jYdv/9+hBAMTbJDUDlLWo5fjir+pVy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicpyCEEiCbz+8gX74jYdv/9pZQpTY7cmMjdBf2YFXtmcJVy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls",
+            "The Dangers in My Heart Boku no Kokoro no Yabai Yatsu"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 1,
+          "i_sgg": 0,
+          "h_img": 1536,
+          "w_img": 1024,
+          "date_img_modified": 1694313800510,
+          "file_size": "1.70 Mb"
+        },
+        {
+          "id_img": "anime_10092023094856_134",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidnl8OtOWi4+91jpOQuMDf5uGtw8nqL5Zjj8pLje1uSLJVy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidnl8OtOWi4+91jpOQuMDf5kAIcaGB1Kfwd3sJpaK4KUpVy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 2,
+          "i_sgg": 0,
+          "h_img": 1536,
+          "w_img": 1024,
+          "date_img_modified": 1694313772870,
+          "file_size": "2.10 Mb"
+        },
+        {
+          "id_img": "anime_10092023094856_128",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiieLl84wXv76jD2nXr679vuD79xT7/n+WG7Z7udftyh/F5Vy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiieLl84wXv76jD2nXr679vuDOUy+DFJ7ouyjwaUiAg5JupVy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 3,
+          "i_sgg": 0,
+          "h_img": 1600,
+          "w_img": 1066,
+          "date_img_modified": 1694313753486,
+          "file_size": "2.21 Mb"
+        },
+        {
+          "id_img": "anime_10092023094856_130",
+          "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifDhtrzYhp+0nKQ1SGe3NmkeQo1RtCyxRHHMsyf6fh6TZVy4706IhQgSYlgwrgVRHU=",
+          "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifDhtrzYhp+0nKQ1SGe3NmktoaceOTX7LGZxMxrgu/gGJVy4706IhQgSYlgwrgVRHU=",
+          "albl": [
+            "Girls"
+          ],
+          "norl": [],
+          "spel": [],
+          "i_top": 0,
+          "i_newest": 4,
+          "i_sgg": 0,
+          "h_img": 1600,
+          "w_img": 1066,
+          "date_img_modified": 1694313743105,
+          "file_size": "1.55 Mb"
+        }
+      ],
+      "i_top": 0,
+      "i_newest": 0,
+      "i_sgg": 0
+    },
     {
       "n_week": "03/September/2023",
       "total": 1784,
@@ -32,7 +128,7 @@
           "norl": [],
           "spel": [],
           "i_top": 0,
-          "i_newest": 1,
+          "i_newest": 0,
           "i_sgg": 0,
           "h_img": 816,
           "w_img": 1456,
@@ -49,7 +145,7 @@
           "norl": [],
           "spel": [],
           "i_top": 0,
-          "i_newest": 2,
+          "i_newest": 0,
           "i_sgg": 0,
           "h_img": 1232,
           "w_img": 928,
@@ -66,7 +162,7 @@
           "norl": [],
           "spel": [],
           "i_top": 0,
-          "i_newest": 3,
+          "i_newest": 0,
           "i_sgg": 0,
           "h_img": 816,
           "w_img": 1456,
@@ -83,7 +179,7 @@
           "norl": [],
           "spel": [],
           "i_top": 0,
-          "i_newest": 4,
+          "i_newest": 0,
           "i_sgg": 0,
           "h_img": 1232,
           "w_img": 928,

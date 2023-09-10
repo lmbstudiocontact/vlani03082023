@@ -1,6 +1,24 @@
 {
-  "total": 150,
+  "total": 151,
   "data": [
+    {
+      "id_img": "anime_05092023080326_116",
+      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidfDremQBjP5zF3HG8ZqHYF91+MnHLCgkL5ADlibneYcpVy4706IhQgSYlgwrgVRHU=",
+      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidfDremQBjP5zF3HG8ZqHYFohigvqQJvVq63WJ9r0rSnZVy4706IhQgSYlgwrgVRHU=",
+      "albl": [
+        "Girls",
+        "Saint Cecilia and Pastor Lawrence Shiro Seijo to Kuro Bokushi"
+      ],
+      "norl": [],
+      "spel": [],
+      "i_top": 0,
+      "i_newest": 1148,
+      "i_sgg": 0,
+      "h_img": 1152,
+      "w_img": 768,
+      "date_img_modified": 1693814097369,
+      "file_size": "1.04 Mb"
+    },
     {
       "id_img": "anime_03092023084553_283",
       "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidr1QsITF8D8vfR2NV92okc9fZixN3uVEdRRZMrznKNiZVy4706IhQgSYlgwrgVRHU=",
@@ -12,7 +30,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 59,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1216,
@@ -30,7 +48,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 60,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1840,
       "w_img": 1296,
@@ -48,7 +66,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 90,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 4352,
       "w_img": 7680,
@@ -66,7 +84,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 91,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1024,
@@ -84,7 +102,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 92,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1024,
@@ -1782,24 +1800,6 @@
       "w_img": 800,
       "date_img_modified": 1690108388457,
       "file_size": "1012.04 Kb"
-    },
-    {
-      "id_img": "anime23_23072023173255_23072023170458_23072023170459_51",
-      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidTGNVKPNJ0JJGI8frweQLI+2N0AUgl30lYjWlJbDGeTZVy4706IhQgSYlgwrgVRHU=",
-      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidTGNVKPNJ0JJGI8frweQLI3p9czsp1OoWQEuhuOWm9MJVy4706IhQgSYlgwrgVRHU=",
-      "albl": [
-        "Girls",
-        "Saint Cecilia and Pastor Lawrence Shiro Seijo to Kuro Bokushi"
-      ],
-      "norl": [],
-      "spel": [],
-      "i_top": 0,
-      "i_newest": 0,
-      "i_sgg": 0,
-      "h_img": 1130,
-      "w_img": 800,
-      "date_img_modified": 1690108388418,
-      "file_size": "869.81 Kb"
     }
   ]
 }
