@@ -1,6 +1,24 @@
 {
-  "total": 466,
+  "total": 467,
   "data": [
+    {
+      "id_img": "anime_16092023150154_57",
+      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidoY0/yoTJkAqL6BT004OTodYDyQcdPob9dibIdTni0aJVy4706IhQgSYlgwrgVRHU=",
+      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidoY0/yoTJkAqL6BT004OToYZxe7CAHn+1mQhg1Ar/s7ZVy4706IhQgSYlgwrgVRHU=",
+      "albl": [
+        "Girls",
+        "Love Live"
+      ],
+      "norl": [],
+      "spel": [],
+      "i_top": 0,
+      "i_newest": 422,
+      "i_sgg": 0,
+      "h_img": 1232,
+      "w_img": 928,
+      "date_img_modified": 1694849931654,
+      "file_size": "1.67 Mb"
+    },
     {
       "id_img": "anime07_07082023090250_07082023081647_07082023081647_2",
       "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidgzkVNTnr95TtwVSMq260XtvqcsLxFgkykkn2L6zK+yJVy4706IhQgSYlgwrgVRHU=",
@@ -2886,34 +2904,6 @@
       "w_img": 760,
       "date_img_modified": 1645538981423,
       "file_size": "96.25 Kb"
-    },
-    {
-      "id_img": "LoveLive_845144_crop2608_-1834889493",
-      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifDXA1YZED4XonqVt2ABoupu+JN6aFWuM1heDC5MQ+IH5Vy4706IhQgSYlgwrgVRHU=",
-      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifDXA1YZED4XonqVt2ABoupi43y4rxMqDp/CmWv7icezJVy4706IhQgSYlgwrgVRHU=",
-      "albl": [
-        "Girls",
-        "Love Live"
-      ],
-      "norl": [
-        "Umi Sonoda"
-      ],
-      "spel": [
-        "Girls Hair Black",
-        "Girls Uniform",
-        "Girls Eyes Yellow",
-        "Girls Long Hair",
-        "Girls Hats",
-        "Girls Smile",
-        "Girls Tie Bows"
-      ],
-      "i_top": 0,
-      "i_newest": 0,
-      "i_sgg": 0,
-      "h_img": 1080,
-      "w_img": 760,
-      "date_img_modified": 1645538981083,
-      "file_size": "93.85 Kb"
     }
   ]
 }

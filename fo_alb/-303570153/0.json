@@ -1,6 +1,24 @@
 {
-  "total": 499,
+  "total": 500,
   "data": [
+    {
+      "id_img": "anime_15092023080140_106",
+      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifLF0CqMrod0Poe7DK0RAwejcCTimCcnh7/qDs4XS8MSpVy4706IhQgSYlgwrgVRHU=",
+      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifLF0CqMrod0Poe7DK0RAweyT9xM2ZTsz8JKLTiFQQuWJVy4706IhQgSYlgwrgVRHU=",
+      "albl": [
+        "Girls",
+        "My Hero Academia"
+      ],
+      "norl": [],
+      "spel": [],
+      "i_top": 0,
+      "i_newest": 744,
+      "i_sgg": 0,
+      "h_img": 1232,
+      "w_img": 928,
+      "date_img_modified": 1694739421493,
+      "file_size": "1.06 Mb"
+    },
     {
       "id_img": "anime_09092023082604_61",
       "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicB5cQ3rlMvhj60zDoecOs7hLD0+jdcN2dpFlToQIUitpVy4706IhQgSYlgwrgVRHU=",
@@ -12,7 +30,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 372,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 2304,
@@ -30,7 +48,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 373,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 2304,
@@ -48,7 +66,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 374,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 2304,
       "w_img": 1536,
@@ -66,7 +84,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 375,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 2304,
       "w_img": 1536,
@@ -84,7 +102,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 376,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 2304,
       "w_img": 1536,
@@ -102,7 +120,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 377,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 2304,
       "w_img": 1536,
@@ -120,7 +138,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 378,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 2304,
       "w_img": 1536,
@@ -138,7 +156,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 379,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 2304,
       "w_img": 1536,
@@ -156,7 +174,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 380,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 2304,
       "w_img": 1536,
@@ -174,7 +192,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 381,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 2304,
       "w_img": 1536,
@@ -1811,26 +1829,6 @@
       "w_img": 1067,
       "date_img_modified": 1645539556072,
       "file_size": "144.57 Kb"
-    },
-    {
-      "id_img": "MyHeroAcademia_975184_crop2608_728005820",
-      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiie65r7k0qeK1OD3gWcDcF7GTWUZAGgMitR8xl9+jbWd5ZVy4706IhQgSYlgwrgVRHU=",
-      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiie65r7k0qeK1OD3gWcDcF7GaR2V6bsh3B+oNtodHTPZsZVy4706IhQgSYlgwrgVRHU=",
-      "albl": [
-        "Boy",
-        "My Hero Academia"
-      ],
-      "norl": [
-        "Izuku Midoriya"
-      ],
-      "spel": [],
-      "i_top": 0,
-      "i_newest": 0,
-      "i_sgg": 0,
-      "h_img": 1080,
-      "w_img": 760,
-      "date_img_modified": 1645539555480,
-      "file_size": "93.55 Kb"
     }
   ]
 }
