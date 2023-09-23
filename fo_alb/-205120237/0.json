@@ -1,6 +1,24 @@
 {
-  "total": 296,
+  "total": 297,
   "data": [
+    {
+      "id_img": "anime_23092023092722_32",
+      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiid3kXEpMSawgR4NnghDkC7NuuB+FdygRKtW2fTgeZGqMJVy4706IhQgSYlgwrgVRHU=",
+      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiid3kXEpMSawgR4NnghDkC7NwV4gH+way8YIKXdECKuGFpVy4706IhQgSYlgwrgVRHU=",
+      "albl": [
+        "Girls",
+        "Sword Art Online"
+      ],
+      "norl": [],
+      "spel": [],
+      "i_top": 0,
+      "i_newest": 231,
+      "i_sgg": 0,
+      "h_img": 1536,
+      "w_img": 1024,
+      "date_img_modified": 1695432647137,
+      "file_size": "1.63 Mb"
+    },
     {
       "id_img": "anime_13092023115233_62",
       "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiid+/vAp0QNoYEjq6u1yScEs/qR+QhMwKldacacXnqF6/ZVy4706IhQgSYlgwrgVRHU=",
@@ -12,7 +30,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 1225,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1024,
       "w_img": 1024,
@@ -30,7 +48,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 1226,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1024,
@@ -2341,29 +2359,6 @@
       "w_img": 844,
       "date_img_modified": 1645545757533,
       "file_size": "154.83 Kb"
-    },
-    {
-      "id_img": "SwordArtOnline_801886_crop2608_1726184117",
-      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiic7EWXWsfPpI6HPyn1RoYVVXLjIHPL9a9z0HH2ApZhpBZVy4706IhQgSYlgwrgVRHU=",
-      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiic7EWXWsfPpI6HPyn1RoYVVsqR9UzGPDTIy0+RfJ1VpzZVy4706IhQgSYlgwrgVRHU=",
-      "albl": [
-        "Girls",
-        "Sword Art Online"
-      ],
-      "norl": [],
-      "spel": [
-        "Girls Eyes Orange",
-        "Girls Uniform",
-        "Girls Long Hair",
-        "Girls Hair Brow"
-      ],
-      "i_top": 0,
-      "i_newest": 0,
-      "i_sgg": 0,
-      "h_img": 1200,
-      "w_img": 844,
-      "date_img_modified": 1645545757159,
-      "file_size": "102.54 Kb"
     }
   ]
 }
