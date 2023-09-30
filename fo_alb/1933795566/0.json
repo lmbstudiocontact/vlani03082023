@@ -1,6 +1,26 @@
 {
-  "total": 203,
+  "total": 204,
   "data": [
+    {
+      "id_img": "anime_26092023083411_82",
+      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiif++Y217qy+MFWfU6tpwjI4WI23iyhuciXj+/iHXqnGcZVy4706IhQgSYlgwrgVRHU=",
+      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiif++Y217qy+MFWfU6tpwjI4NCZz7xVihbPW8lJ1b+D8W5Vy4706IhQgSYlgwrgVRHU=",
+      "albl": [
+        "Girls",
+        "Spy x Family 2022"
+      ],
+      "norl": [
+        "Anya Forger"
+      ],
+      "spel": [],
+      "i_top": 0,
+      "i_newest": 774,
+      "i_sgg": 0,
+      "h_img": 1024,
+      "w_img": 568,
+      "date_img_modified": 1695690590198,
+      "file_size": "748.95 Kb"
+    },
     {
       "id_img": "anime_16092023074538_150",
       "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiieprsuJI87OBe6iL7goojsnhc7aKV2Bs3qa94P9VoY3bZVy4706IhQgSYlgwrgVRHU=",
@@ -1962,26 +1982,6 @@
       "w_img": 1920,
       "date_img_modified": 1690766963022,
       "file_size": "5.29 Mb"
-    },
-    {
-      "id_img": "anime31_31072023082908_31072023072220_31072023072220_2",
-      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiic2PCzML0q5BnQSwXAO3BH1EZ9Bt6s/W37EV2gAH1Ye4ZVy4706IhQgSYlgwrgVRHU=",
-      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiic2PCzML0q5BnQSwXAO3BH1XalKc1mmcudEFHNviYEEAZVy4706IhQgSYlgwrgVRHU=",
-      "albl": [
-        "Girls",
-        "Spy x Family 2022"
-      ],
-      "norl": [
-        "Yor Forger"
-      ],
-      "spel": [],
-      "i_top": 0,
-      "i_newest": 0,
-      "i_sgg": 0,
-      "h_img": 1304,
-      "w_img": 864,
-      "date_img_modified": 1690766954027,
-      "file_size": "1.30 Mb"
     }
   ]
 }

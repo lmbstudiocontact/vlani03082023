@@ -1,6 +1,24 @@
 {
-  "total": 151,
+  "total": 152,
   "data": [
+    {
+      "id_img": "anime_25092023075849_77",
+      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifvso/E+Vip+iCmH1lXkuTT1ILiOHMBlshsI6akO9O4n5Vy4706IhQgSYlgwrgVRHU=",
+      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiifvso/E+Vip+iCmH1lXkuTTYIohCI7WRd0UkMXcKd4jVJVy4706IhQgSYlgwrgVRHU=",
+      "albl": [
+        "Girls",
+        "To Aru Kagaku No Railgun"
+      ],
+      "norl": [],
+      "spel": [],
+      "i_top": 0,
+      "i_newest": 924,
+      "i_sgg": 0,
+      "h_img": 1024,
+      "w_img": 568,
+      "date_img_modified": 1695602762117,
+      "file_size": "769.15 Kb"
+    },
     {
       "id_img": "anime_23092023140202_79",
       "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiicAE9J3BUdCcJOEX8mSTtqphUVS0u1DKNOmqDo1ZUPvypVy4706IhQgSYlgwrgVRHU=",
@@ -12,7 +30,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 16,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1024,
       "w_img": 568,
@@ -2792,31 +2810,6 @@
       "w_img": 1027,
       "date_img_modified": 1645546218995,
       "file_size": "152.25 Kb"
-    },
-    {
-      "id_img": "ToAruKagakuNoRailgun_813215_crop2608_-1720651325",
-      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiich1VOzN6OdQi66Eqwz7wGhCr2Y7yv9nOXPROZry1HwgJVy4706IhQgSYlgwrgVRHU=",
-      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiich1VOzN6OdQi66Eqwz7wGhPyZuJEhHBZK/ll9bXiQ1MJVy4706IhQgSYlgwrgVRHU=",
-      "albl": [
-        "To Aru Kagaku No Railgun",
-        "Girls"
-      ],
-      "norl": [
-        "Mikoto Misaka"
-      ],
-      "spel": [
-        "Girls Student",
-        "Girls Hair Yellow",
-        "Girls Short Hair",
-        "Girls Eyes Red"
-      ],
-      "i_top": 0,
-      "i_newest": 0,
-      "i_sgg": 0,
-      "h_img": 1360,
-      "w_img": 957,
-      "date_img_modified": 1645546218541,
-      "file_size": "204.36 Kb"
     }
   ]
 }
