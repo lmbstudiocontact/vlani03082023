@@ -1,6 +1,24 @@
 {
-  "total": 483,
+  "total": 484,
   "data": [
+    {
+      "id_img": "anime_07102023101153_16",
+      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidQrmLbhCj4livkqhtPjXztc4My5WOcYH/pyaxS2OVQgJVy4706IhQgSYlgwrgVRHU=",
+      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidQrmLbhCj4livkqhtPjXztwEtlLtc7pKML4JlyOARlP5Vy4706IhQgSYlgwrgVRHU=",
+      "albl": [
+        "Demon Slayer Kimetsu no Yaiba",
+        "Girls"
+      ],
+      "norl": [],
+      "spel": [],
+      "i_top": 0,
+      "i_newest": 90,
+      "i_sgg": 0,
+      "h_img": 1304,
+      "w_img": 864,
+      "date_img_modified": 1696646358794,
+      "file_size": "1.03 Mb"
+    },
     {
       "id_img": "anime_30092023095752_46",
       "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiidJ8IEQe41e/fQWJMMVpfjdam/pD4KTFn6Y14g2wBMjLZVy4706IhQgSYlgwrgVRHU=",
@@ -12,7 +30,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 2,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1536,
@@ -30,7 +48,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 3,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1536,
       "w_img": 1536,
@@ -48,7 +66,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 706,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1600,
       "w_img": 1066,
@@ -66,7 +84,7 @@
       "norl": [],
       "spel": [],
       "i_top": 0,
-      "i_newest": 707,
+      "i_newest": 0,
       "i_sgg": 0,
       "h_img": 1600,
       "w_img": 1066,
@@ -1782,24 +1800,6 @@
       "w_img": 2560,
       "date_img_modified": 1690512234357,
       "file_size": "6.81 Mb"
-    },
-    {
-      "id_img": "anime28_28072023094336_28072023092041_28072023092042_14",
-      "lik": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiietdbhYLA9usY9V080+EibkYxj+kPTxIbzWEcDLnbS68ZVy4706IhQgSYlgwrgVRHU=",
-      "thub": "UTb0sGqADnbLiHq9qhRMRkSRiLND0Tk7ctN8tpraiietdbhYLA9usY9V080+EibknpFLc/1dJeOJVdILOrxvxZVy4706IhQgSYlgwrgVRHU=",
-      "albl": [
-        "Demon Slayer Kimetsu no Yaiba",
-        "Girls"
-      ],
-      "norl": [],
-      "spel": [],
-      "i_top": 0,
-      "i_newest": 0,
-      "i_sgg": 0,
-      "h_img": 3840,
-      "w_img": 2560,
-      "date_img_modified": 1690512234095,
-      "file_size": "6.63 Mb"
     }
   ]
 }
